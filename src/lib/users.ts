@@ -1,3 +1,4 @@
+
 // This is a simulated in-memory user store.
 // In a real application, this would be a database.
 
@@ -27,6 +28,15 @@ class UserStore {
             name: 'Regular Farmer',
             email: 'farmer@agriassist.app',
             passwordHash: this.hashPassword('farmerpass'),
+            role: 'user',
+            isPro: false,
+        });
+
+        // Add a default Google user
+        this.userList.push({
+            name: 'Google User',
+            email: 'google.user@agriassist.app',
+            passwordHash: this.hashPassword('googlepass'),
             role: 'user',
             isPro: false,
         });
