@@ -12,12 +12,15 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
     const router = useRouter();
 
     useEffect(() => {
-        if (!loading) {
-            if (!user) {
-                router.push('/login');
-            } else if (user.role !== 'admin') {
-                router.push('/');
-            }
+        if (loading) {
+            return; // Wait for the loading to complete.
+        }
+        if (!user) {
+            router.push('/login');
+            return;
+        }
+        if (user.role !== 'admin') {
+            router.push('/');
         }
     }, [user, loading, router]);
 

@@ -12,13 +12,15 @@ function AppWithAuth({ children }: { children: React.ReactNode }) {
   const router = useRouter();
 
   useEffect(() => {
-    if (!loading && !user) {
+    if (loading) {
+        return; // Wait for loading to complete
+    }
+    if (!user) {
       router.push('/login');
     }
   }, [user, loading, router]);
 
   if (loading || !user) {
-    // You can replace this with a proper loading spinner
     return (
       <div className="flex h-screen items-center justify-center">
         Loading...

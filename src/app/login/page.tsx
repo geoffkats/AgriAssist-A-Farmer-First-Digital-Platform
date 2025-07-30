@@ -61,12 +61,16 @@ export default function LoginPage() {
   const handleGoogleLogin = async () => {
     setLoading(true);
     try {
-        await login('google.user@agriassist.app', 'googlepass');
+        const user = await login('google.user@agriassist.app', 'googlepass');
         toast({
             title: 'Login Successful',
             description: 'Welcome back!',
         });
-        router.push('/');
+        if (user.role === 'admin') {
+            router.push('/admin/dashboard');
+        } else {
+            router.push('/');
+        }
     } catch (error) {
         toast({
             variant: 'destructive',
