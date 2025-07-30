@@ -1,15 +1,17 @@
 
 'use client';
 
+import { useState } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Bell, ArrowUp, ArrowDown, Star } from 'lucide-react';
+import { Bell, ArrowUp, ArrowDown, Star, CheckCircle, BellRing } from 'lucide-react';
 import PricePredictor from '@/components/price-predictor';
 import { useProStatus } from '@/context/pro-status-context';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import Link from 'next/link';
 import { predictAction } from './actions';
+import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 
 const commodityPrices = [
   { name: 'Maize', price: 1250, unit: 'UGX/kg', change: 2.5, trend: 'up' },
@@ -22,6 +24,13 @@ const commodityPrices = [
 
 export default function PricesPage() {
   const { isPro, aiCredits, consumeCredit } = useProStatus();
+  const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
+  const [selectedCommodity, setSelectedCommodity] = useState<any>(null);
+
+  const openAlertModal = (commodity: any) => {
+    setSelectedCommodity(commodity);
+    setIsAlertModalOpen(true);
+  };
 
   return (
     <div className="flex flex-col gap-8">
@@ -54,7 +63,7 @@ export default function PricesPage() {
                       </Badge>
                     </TableCell>
                     <TableCell className="text-right">
-                      <Button variant="ghost" size="icon">
+                      <Button variant="ghost" size="icon" onClick={() => openAlertModal(item)}>
                         <Bell className="h-4 w-4" />
                         <span className="sr-only">Set price alert for {item.name}</span>
                       </Button>
@@ -99,6 +108,26 @@ export default function PricesPage() {
           )}
         </div>
       </div>
+      
+       <Dialog open={isAlertModalOpen} onOpenChange={setIsAlertModalOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Set Price Alert</DialogTitle>
+            <DialogDescription>
+              This is a simulation. In a real app, you would be notified when the price of {selectedCommodity?.name} changes.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsAlertModalOpen(false)}>Cancel</Button>
+            <Button onClick={() => setIsAlertModalOpen(false)}>
+              <BellRing className="mr-2" />
+              Confirm Alert
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
+
+    

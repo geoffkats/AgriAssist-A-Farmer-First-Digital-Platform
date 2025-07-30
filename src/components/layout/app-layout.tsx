@@ -3,7 +3,7 @@
 
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { Bot, Home, Landmark, MessageSquare, BookOpen, ShoppingBasket, TrendingUp, Users, Wheat, Star, AreaChart, LogOut, User, Shield, Briefcase, Settings, Package, Banknote, MessageCircle, FileText, UserCog, Library, Truck, Group, Wand2 } from 'lucide-react';
+import { Bot, Home, Landmark, MessageSquare, BookOpen, ShoppingBasket, TrendingUp, Users, Wheat, Star, AreaChart, LogOut, User, Shield, Briefcase, Settings, Package, Banknote, MessageCircle, FileText, UserCog, Library, Truck, Group, Wand2, ShoppingCart, X } from 'lucide-react';
 import {
   SidebarProvider,
   Sidebar,
@@ -23,6 +23,11 @@ import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { useProStatus } from '@/context/pro-status-context';
 import { useAuth } from '@/context/auth-context';
 import { Avatar, AvatarFallback } from '../ui/avatar';
+import { useCart } from '@/hooks/use-cart';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetFooter } from '../ui/sheet';
+import Image from 'next/image';
+import { Separator } from '../ui/separator';
+import { Badge } from '../ui/badge';
 
 
 const navItems = [
@@ -51,6 +56,65 @@ const adminNavItems = [
 ];
 
 
+function CartSheet() {
+  const { cart, removeFromCart, clearCart } = useCart();
+  const subtotal = cart.reduce((acc, item) => {
+    const price = parseFloat(item.price.replace(/[^0-9.-]+/g, ""));
+    return acc + price;
+  }, 0);
+
+  return (
+      <Sheet>
+        <SheetTrigger asChild>
+          <button className="relative">
+            <ShoppingCart className="text-sidebar-primary" />
+            {cart.length > 0 && (
+              <Badge variant="destructive" className="absolute -top-2 -right-2 h-5 w-5 justify-center p-0">{cart.length}</Badge>
+            )}
+          </button>
+        </SheetTrigger>
+        <SheetContent>
+            <SheetHeader>
+                <SheetTitle>Shopping Cart</SheetTitle>
+            </SheetHeader>
+            {cart.length > 0 ? (
+                 <div className="flex flex-col h-full">
+                    <div className="flex-grow overflow-y-auto -mx-6 px-6 py-4 space-y-4">
+                        {cart.map((item, index) => (
+                        <div key={index} className="flex items-center gap-4">
+                            <Image src={item.image} alt={item.name} width={64} height={64} className="rounded-md object-cover" />
+                            <div className="flex-grow">
+                                <p className="font-semibold">{item.name}</p>
+                                <p className="text-sm text-muted-foreground">{item.price}</p>
+                            </div>
+                             <Button variant="ghost" size="icon" onClick={() => removeFromCart(item.name)}>
+                                <X className="h-4 w-4" />
+                            </Button>
+                        </div>
+                        ))}
+                    </div>
+                     <SheetFooter className="flex-col !space-x-0 gap-4 border-t pt-4">
+                         <div className="flex justify-between font-semibold text-lg">
+                            <span>Subtotal</span>
+                            <span>UGX {subtotal.toLocaleString()}</span>
+                         </div>
+                        <Button className="w-full">Proceed to Checkout</Button>
+                        <Button variant="outline" className="w-full" onClick={clearCart}>Clear Cart</Button>
+                    </SheetFooter>
+                </div>
+            ) : (
+                <div className="flex flex-col items-center justify-center h-full text-center">
+                    <ShoppingCart className="h-16 w-16 text-muted-foreground mb-4"/>
+                    <p className="text-muted-foreground">Your cart is empty.</p>
+                    <p className="text-sm text-muted-foreground">Add items from the marketplace to get started.</p>
+                </div>
+            )}
+        </SheetContent>
+      </Sheet>
+  );
+}
+
+
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
@@ -77,14 +141,21 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         <SidebarContent>
            <SidebarGroup>
               {user && (
-                <div className="flex items-center gap-3 p-2">
-                  <Avatar>
-                    <AvatarFallback className="bg-primary text-primary-foreground">{user.name.charAt(0)}</AvatarFallback>
-                  </Avatar>
-                  <div className="flex flex-col group-data-[collapsible=icon]:hidden">
-                    <span className="text-sm font-semibold">{user.name}</span>
-                    <span className="text-xs text-muted-foreground capitalize">{user.role}</span>
+                <div className="flex items-center justify-between gap-3 p-2">
+                  <div className="flex items-center gap-3 overflow-hidden">
+                    <Avatar>
+                      <AvatarFallback className="bg-primary text-primary-foreground">{user.name.charAt(0)}</AvatarFallback>
+                    </Avatar>
+                    <div className="flex flex-col group-data-[collapsible=icon]:hidden">
+                      <span className="text-sm font-semibold truncate">{user.name}</span>
+                      <span className="text-xs text-muted-foreground capitalize">{user.role}</span>
+                    </div>
                   </div>
+                   {user.role === 'user' && (
+                     <div className="group-data-[collapsible=icon]:hidden">
+                      <CartSheet />
+                    </div>
+                   )}
                 </div>
               )}
             </SidebarGroup>
@@ -185,3 +256,5 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     </SidebarProvider>
   );
 }
+
+    

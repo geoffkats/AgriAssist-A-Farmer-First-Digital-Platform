@@ -1,12 +1,16 @@
 
 'use client';
 
+import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { ArrowRight, Bot, LineChart, ShoppingBasket, Users, Leaf, Video } from 'lucide-react';
+import { ArrowRight, Bot, LineChart, ShoppingBasket, Users, Leaf, Video, CheckCircle, ShoppingCart } from 'lucide-react';
 import Image from 'next/image';
 import { Badge } from '@/components/ui/badge';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
+import { useCart } from '@/hooks/use-cart';
+import { useToast } from '@/hooks/use-toast';
 
 const featureCards = [
   {
@@ -40,15 +44,15 @@ const featureCards = [
 ];
 
 const marketplaceItems = [
-    { name: 'Drought-Resistant Maize Seeds', price: 'UGX 15,000/kg', image: 'https://placehold.co/300x200', hint: 'maize seeds' },
-    { name: 'NPK 17-17-17 Fertilizer', price: 'UGX 180,000/bag', image: 'https://placehold.co/300x200', hint: 'fertilizer bag' },
-    { name: 'Organic Pesticide', price: 'UGX 45,000/L', image: 'https://placehold.co/300x200', hint: 'pesticide bottle' },
+    { name: 'Drought-Resistant Maize Seeds', price: 'UGX 15,000/kg', image: 'https://placehold.co/300x200', hint: 'maize seeds', description: 'High-yield, drought-resistant maize seeds suitable for all regions of Uganda. Matures in 90-120 days.' },
+    { name: 'NPK 17-17-17 Fertilizer', price: 'UGX 180,000/bag', image: 'https://placehold.co/300x200', hint: 'fertilizer bag', description: 'A 50kg bag of balanced NPK fertilizer for promoting healthy plant growth and maximizing yield.' },
+    { name: 'Organic Pesticide', price: 'UGX 45,000/L', image: 'https://placehold.co/300x200', hint: 'pesticide bottle', description: '1-liter bottle of neem oil-based organic pesticide, effective against a wide range of common pests.' },
 ];
 
 const agronomyGuides = [
-    { title: 'Identifying Fall Armyworm', type: 'Video', icon: Video },
-    { title: 'Proper Fertilizer Application for Beans', type: 'Guide', icon: Leaf },
-    { title: 'Post-Harvest Handling for Coffee', type: 'Video', icon: Video },
+    { title: 'Identifying Fall Armyworm', type: 'Video', icon: Video, href: "/guides" },
+    { title: 'Proper Fertilizer Application for Beans', type: 'Guide', icon: Leaf, href: "/guides" },
+    { title: 'Post-Harvest Handling for Coffee', type: 'Video', icon: Video, href: "/guides" },
 ]
 
 type User = {
@@ -60,6 +64,25 @@ type DashboardClientContentProps = {
 }
 
 export default function DashboardClientContent({ user }: DashboardClientContentProps) {
+    const [isProductModalOpen, setIsProductModalOpen] = useState(false);
+    const [selectedProduct, setSelectedProduct] = useState<any>(null);
+    const { addToCart } = useCart();
+    const { toast } = useToast();
+
+    const openProductModal = (product: any) => {
+        setSelectedProduct(product);
+        setIsProductModalOpen(true);
+    };
+
+    const handleAddToCart = (product: any) => {
+        addToCart(product);
+        setIsProductModalOpen(false);
+        toast({
+            title: "Added to Cart",
+            description: `${product.name} has been successfully added to your cart.`,
+        });
+    }
+
   return (
     <div className="flex flex-col gap-8">
       <header>
@@ -102,7 +125,7 @@ export default function DashboardClientContent({ user }: DashboardClientContentP
                         <p className="font-semibold">{item.name}</p>
                         <p className="text-sm text-muted-foreground">{item.price}</p>
                     </div>
-                    <Button variant="outline" size="sm">View</Button>
+                    <Button variant="outline" size="sm" onClick={() => openProductModal(item)}>View</Button>
                  </div>
                ))}
             </CardContent>
@@ -114,7 +137,7 @@ export default function DashboardClientContent({ user }: DashboardClientContentP
             </CardHeader>
             <CardContent className="grid gap-4">
                 {agronomyGuides.map(guide => (
-                    <div key={guide.title} className="flex items-center gap-4 p-2 rounded-md hover:bg-secondary transition-colors cursor-pointer">
+                   <Link href={guide.href} key={guide.title} className="flex items-center gap-4 p-2 rounded-md hover:bg-secondary transition-colors">
                         <div className={`p-2 rounded-full bg-primary/10`}>
                            <guide.icon className="w-5 h-5 text-primary" />
                         </div>
@@ -122,11 +145,35 @@ export default function DashboardClientContent({ user }: DashboardClientContentP
                             <p className="font-semibold">{guide.title}</p>
                         </div>
                         <Badge variant={guide.type === 'Video' ? 'destructive' : 'secondary'}>{guide.type}</Badge>
-                    </div>
+                    </Link>
                 ))}
             </CardContent>
         </Card>
       </div>
+
+       <Dialog open={isProductModalOpen} onOpenChange={setIsProductModalOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{selectedProduct?.name}</DialogTitle>
+            <DialogDescription>
+                {selectedProduct?.price}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="py-4 space-y-4">
+             <Image src={selectedProduct?.image} alt={selectedProduct?.name} width={400} height={300} className="w-full h-48 object-cover rounded-md" />
+             <p className="text-muted-foreground">{selectedProduct?.description}</p>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsProductModalOpen(false)}>Close</Button>
+            <Button onClick={() => handleAddToCart(selectedProduct)}>
+                <ShoppingCart className="mr-2" />
+                Add to Cart
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
+
+    
