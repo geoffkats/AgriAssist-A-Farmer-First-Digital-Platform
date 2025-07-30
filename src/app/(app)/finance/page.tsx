@@ -1,6 +1,11 @@
+
+'use client';
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ArrowUpRight, ArrowDownLeft, Landmark, Plus, Receipt } from 'lucide-react';
+import { ArrowUpRight, ArrowDownLeft, Landmark, Plus, Receipt, Star } from 'lucide-react';
+import { useProStatus } from '@/context/pro-status-context';
+import Link from 'next/link';
 
 const transactions = [
     { type: 'Market Sale', amount: 450000, date: '2024-07-20', direction: 'in' },
@@ -10,6 +15,8 @@ const transactions = [
 ];
 
 export default function FinancePage() {
+  const { isPro } = useProStatus();
+
   return (
     <div className="flex flex-col gap-8">
       <header>
@@ -34,22 +41,39 @@ export default function FinancePage() {
                 <p className="text-4xl font-bold">UGX 1,250,000</p>
             </CardContent>
         </Card>
-         <Card className="flex flex-col">
-            <CardHeader>
-                <CardTitle className="font-headline">Agri-Credit</CardTitle>
-                <CardDescription>Get a loan for your farm inputs.</CardDescription>
-            </CardHeader>
-            <CardContent className="flex-grow">
-                <p className="text-sm text-muted-foreground">Available Limit</p>
-                <p className="text-2xl font-bold">UGX 2,000,000</p>
-            </CardContent>
-            <CardFooter>
-                <Button className="w-full">
-                    <Landmark className="mr-2 h-4 w-4" />
-                    Apply for Loan
-                </Button>
-            </CardFooter>
-        </Card>
+        {isPro ? (
+            <Card className="flex flex-col">
+                <CardHeader>
+                    <CardTitle className="font-headline">Agri-Credit</CardTitle>
+                    <CardDescription>Get a loan for your farm inputs.</CardDescription>
+                </CardHeader>
+                <CardContent className="flex-grow">
+                    <p className="text-sm text-muted-foreground">Available Limit</p>
+                    <p className="text-2xl font-bold">UGX 2,000,000</p>
+                </CardContent>
+                <CardFooter>
+                    <Button className="w-full">
+                        <Landmark className="mr-2 h-4 w-4" />
+                        Apply for Loan
+                    </Button>
+                </CardFooter>
+            </Card>
+        ) : (
+            <Card className="flex flex-col items-center justify-center text-center">
+                <CardHeader>
+                    <CardTitle className="font-headline">Unlock Agri-Credit</CardTitle>
+                    <CardDescription>Upgrade to Pro to apply for loans.</CardDescription>
+                </CardHeader>
+                <CardContent className="flex-grow">
+                    <Button asChild>
+                        <Link href="/pricing">
+                            <Star className="mr-2 h-4 w-4" />
+                            Upgrade to Pro
+                        </Link>
+                    </Button>
+                </CardContent>
+            </Card>
+        )}
       </div>
       
        <Card>

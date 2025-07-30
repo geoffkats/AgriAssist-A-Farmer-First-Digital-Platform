@@ -1,7 +1,17 @@
+
+'use client';
+
 import PestIdentifier from '@/components/pest-identifier';
 import { identifyPestDisease, type IdentifyPestDiseaseInput } from '@/ai/flows/identify-pest-disease';
+import { useProStatus } from '@/context/pro-status-context';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Star } from 'lucide-react';
+import Link from 'next/link';
 
 export default function AgronomistPage() {
+  const { isPro } = useProStatus();
+
   async function identifyAction(input: IdentifyPestDiseaseInput) {
     'use server';
     return await identifyPestDisease(input);
@@ -15,7 +25,24 @@ export default function AgronomistPage() {
         </p>
       </header>
       <div className="max-w-4xl mx-auto w-full">
-        <PestIdentifier identifyAction={identifyAction} />
+        {isPro ? (
+          <PestIdentifier identifyAction={identifyAction} />
+        ) : (
+          <Card className="text-center">
+            <CardHeader>
+              <CardTitle>Unlock the AI Agronomist</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="mb-4 text-muted-foreground">This feature is available to Pro subscribers. Upgrade to get instant pest and disease diagnosis.</p>
+              <Button asChild>
+                <Link href="/pricing">
+                  <Star className="mr-2 h-4 w-4" />
+                  Upgrade to Pro
+                </Link>
+              </Button>
+            </CardContent>
+          </Card>
+        )}
       </div>
     </div>
   );

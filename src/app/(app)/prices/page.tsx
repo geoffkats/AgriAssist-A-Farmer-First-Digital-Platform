@@ -1,9 +1,15 @@
+
+'use client';
+
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Bell, ArrowUp, ArrowDown } from 'lucide-react';
+import { Bell, ArrowUp, ArrowDown, Star } from 'lucide-react';
 import PricePredictor from '@/components/price-predictor';
 import { predictPriceTrends, type PredictPriceTrendsInput } from '@/ai/flows/predict-price-trends';
+import { useProStatus } from '@/context/pro-status-context';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import Link from 'next/link';
 
 const commodityPrices = [
   { name: 'Maize', price: 1250, unit: 'UGX/kg', change: 2.5, trend: 'up' },
@@ -15,6 +21,8 @@ const commodityPrices = [
 ];
 
 export default function PricesPage() {
+  const { isPro } = useProStatus();
+
   async function predictAction(input: PredictPriceTrendsInput) {
     'use server';
     return await predictPriceTrends(input);
@@ -63,7 +71,24 @@ export default function PricesPage() {
            </div>
         </div>
         <div className="lg:col-span-1">
-          <PricePredictor predictAction={predictAction} />
+          {isPro ? (
+            <PricePredictor predictAction={predictAction} />
+          ) : (
+            <Card className="h-full flex flex-col items-center justify-center text-center">
+              <CardHeader>
+                <CardTitle>Unlock AI Price Forecasts</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="mb-4 text-muted-foreground">Upgrade to Pro to get AI-powered price predictions and sell smarter.</p>
+                <Button asChild>
+                  <Link href="/pricing">
+                    <Star className="mr-2 h-4 w-4" />
+                    Upgrade to Pro
+                  </Link>
+                </Button>
+              </CardContent>
+            </Card>
+          )}
         </div>
       </div>
     </div>
