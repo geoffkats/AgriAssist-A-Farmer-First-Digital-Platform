@@ -1,0 +1,77 @@
+// This is a simulated in-memory user store.
+// In a real application, this would be a database.
+
+type User = {
+    name: string;
+    email: string;
+    passwordHash: string; // In a real app, never store plain text passwords
+    role: 'user' | 'admin';
+    isPro: boolean;
+};
+
+class UserStore {
+    private userList: User[] = [];
+
+    constructor() {
+        // Add a default admin user
+        this.userList.push({
+            name: 'Admin User',
+            email: 'admin@agriassist.app',
+            passwordHash: this.hashPassword('adminpass'),
+            role: 'admin',
+            isPro: true,
+        });
+
+         // Add a default regular user
+        this.userList.push({
+            name: 'Regular Farmer',
+            email: 'farmer@agriassist.app',
+            passwordHash: this.hashPassword('farmerpass'),
+            role: 'user',
+            isPro: false,
+        });
+    }
+
+    private hashPassword(password: string): string {
+        // In a real app, use a strong hashing algorithm like bcrypt
+        return `hashed_${password}`;
+    }
+
+    private verifyPassword(password: string, hash: string): boolean {
+        return this.hashPassword(password) === hash;
+    }
+
+    addUser(name: string, email: string, password: string): User {
+        if (this.userList.find(u => u.email === email)) {
+            throw new Error('User with this email already exists.');
+        }
+        const newUser: User = {
+            name,
+            email,
+            passwordHash: this.hashPassword(password),
+            role: 'user',
+            isPro: false,
+        };
+        this.userList.push(newUser);
+        return newUser;
+    }
+
+    findUserByEmail(email: string): User | undefined {
+        return this.userList.find(u => u.email === email);
+    }
+
+    authenticateUser(email: string, password: string): User | null {
+        const user = this.findUserByEmail(email);
+        if (user && this.verifyPassword(password, user.passwordHash)) {
+            return user;
+        }
+        return null;
+    }
+
+    getUsers(): User[] {
+        return this.userList;
+    }
+}
+
+// Singleton instance
+export const users = new UserStore();
