@@ -70,8 +70,8 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       <Sidebar>
         <SidebarHeader className="p-4">
           <Link href="/" className="flex items-center gap-2">
-            <Wheat className="h-8 w-8 text-primary" />
-            <h1 className="text-xl font-bold font-headline group-data-[collapsible=icon]:hidden">AgriAssist</h1>
+            <Wheat className="h-8 w-8 text-white" />
+            <h1 className="text-xl font-bold font-headline group-data-[collapsible=icon]:hidden text-white">SynthFarm</h1>
           </Link>
         </SidebarHeader>
         <SidebarContent>
@@ -79,7 +79,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
               {user && (
                 <div className="flex items-center gap-3 p-2">
                   <Avatar>
-                    <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
+                    <AvatarFallback className="bg-primary text-primary-foreground">{user.name.charAt(0)}</AvatarFallback>
                   </Avatar>
                   <div className="flex flex-col group-data-[collapsible=icon]:hidden">
                     <span className="text-sm font-semibold">{user.name}</span>
@@ -126,22 +126,22 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         </SidebarContent>
         <SidebarFooter>
           {!isPro && user?.role !== 'admin' && (
-            <Card className="m-2 bg-gradient-to-br from-primary/20 to-primary/5 border-primary/20 overflow-hidden group-data-[collapsible=icon]:p-0 group-data-[collapsible=icon]:bg-transparent group-data-[collapsible=icon]:border-none">
+            <Card className="m-2 bg-gradient-to-br from-blue-500 to-blue-700 border-none overflow-hidden group-data-[collapsible=icon]:p-0 group-data-[collapsible=icon]:bg-transparent group-data-[collapsible=icon]:border-none text-white">
               <CardHeader className="p-3 group-data-[collapsible=icon]:p-0">
                  <CardTitle className="text-sm flex items-center gap-2 group-data-[collapsible=icon]:hidden">
-                    <Star className="text-primary"/>
+                    <Star/>
                     Unlock Pro Features
                  </CardTitle>
               </CardHeader>
               <CardContent className="p-3 pt-0 group-data-[collapsible=icon]:p-0">
                   <div className="group-data-[collapsible=icon]:hidden">
-                    <p className="text-xs text-primary-foreground/80 mb-3">Get AI price predictions, loan access, and more.</p>
-                    <Button asChild size="sm" className="w-full">
+                    <p className="text-xs text-white/80 mb-3">Get AI price predictions, loan access, and more.</p>
+                    <Button asChild size="sm" className="w-full bg-white text-blue-600 hover:bg-white/90">
                         <Link href="/pricing">Go Pro</Link>
                     </Button>
                   </div>
                    <div className="hidden group-data-[collapsible=icon]:block">
-                     <Button asChild size="icon" className="h-8 w-8">
+                     <Button asChild size="icon" className="h-8 w-8 bg-white text-blue-600 hover:bg-white/90">
                         <Link href="/pricing">
                             <Star />
                         </Link>
@@ -153,15 +153,17 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         </SidebarFooter>
       </Sidebar>
       <SidebarInset suppressHydrationWarning>
-        <div className="p-4 sm:p-6 lg:p-8 !pt-0 min-h-screen">
+        <div className="p-4 sm:p-6 lg:p-8 !pt-0 min-h-screen bg-secondary/50">
           <header className="sticky top-0 z-10 flex items-center h-16 bg-background/80 backdrop-blur-sm md:hidden mb-4 -mx-4 px-4 border-b">
              <SidebarTrigger />
              <div className="flex items-center gap-2 mx-auto">
                 <Wheat className="h-6 w-6 text-primary" />
-                <h1 className="text-lg font-bold font-headline">AgriAssist</h1>
+                <h1 className="text-lg font-bold font-headline">SynthFarm</h1>
               </div>
           </header>
-          {children}
+          <div className="py-8">
+            {children}
+          </div>
         </div>
       </SidebarInset>
     </SidebarProvider>

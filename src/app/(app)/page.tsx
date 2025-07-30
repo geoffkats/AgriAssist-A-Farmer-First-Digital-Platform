@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { ArrowRight, Bot, LineChart, ShoppingBasket, Users, Leaf, Video } from 'lucide-react';
 import Image from 'next/image';
 import { Badge } from '@/components/ui/badge';
+import { useAuth } from '@/context/auth-context';
 
 const featureCards = [
   {
@@ -50,10 +51,12 @@ const agronomyGuides = [
 ]
 
 export default function DashboardPage() {
+  const { user } = useAuth();
+  
   return (
     <div className="flex flex-col gap-8">
       <header>
-        <h1 className="text-3xl font-bold font-headline text-gray-800 dark:text-white">Welcome back, Farmer!</h1>
+        <h1 className="text-3xl font-bold font-headline">Welcome back, {user?.name.split(' ')[0]}!</h1>
         <p className="text-muted-foreground">Here's your farm's overview. Let's make today productive.</p>
       </header>
 
@@ -62,8 +65,10 @@ export default function DashboardPage() {
           <Card key={feature.title} className="flex flex-col">
             <CardHeader className="flex-grow">
               <div className="flex items-center gap-4">
-                <feature.icon className="w-8 h-8 text-primary" />
-                <CardTitle className="font-headline">{feature.title}</CardTitle>
+                <div className="p-3 rounded-full bg-primary/10">
+                    <feature.icon className="w-6 h-6 text-primary" />
+                </div>
+                <CardTitle>{feature.title}</CardTitle>
               </div>
               <CardDescription className="pt-2">{feature.description}</CardDescription>
             </CardHeader>
@@ -102,9 +107,9 @@ export default function DashboardPage() {
             </CardHeader>
             <CardContent className="grid gap-4">
                 {agronomyGuides.map(guide => (
-                    <div key={guide.title} className="flex items-center gap-4 p-2 rounded-md hover:bg-secondary/50 transition-colors">
-                        <div className={`p-2 rounded-full bg-primary/10 ${guide.color}`}>
-                           <guide.icon className="w-5 h-5" />
+                    <div key={guide.title} className="flex items-center gap-4 p-2 rounded-md hover:bg-secondary transition-colors cursor-pointer">
+                        <div className={`p-2 rounded-full bg-primary/10`}>
+                           <guide.icon className="w-5 h-5 text-primary" />
                         </div>
                         <div className="flex-grow">
                             <p className="font-semibold">{guide.title}</p>

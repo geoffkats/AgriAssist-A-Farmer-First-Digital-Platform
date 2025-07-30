@@ -5,10 +5,10 @@ import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 const forums = [
-  { name: 'Maize Growers', members: 12500, newPosts: 45, icon: <Rss className="h-5 w-5 text-yellow-500" /> },
-  { name: 'Coffee Farmers Uganda', members: 8700, newPosts: 23, icon: <Rss className="h-5 w-5 text-yellow-500" /> },
-  { name: 'Kampala Urban Farmers', members: 3400, newPosts: 12, icon: <Rss className="h-5 w-5 text-yellow-500" /> },
-  { name: 'Gulu Agri-preneurs', members: 5600, newPosts: 31, icon: <Rss className="h-5 w-5 text-yellow-500" /> },
+  { name: 'Maize Growers', members: 12500, newPosts: 45, icon: <Rss className="h-5 w-5 text-amber-500" /> },
+  { name: 'Coffee Farmers Uganda', members: 8700, newPosts: 23, icon: <Rss className="h-5 w-5 text-amber-500" /> },
+  { name: 'Kampala Urban Farmers', members: 3400, newPosts: 12, icon: <Rss className="h-5 w-5 text-amber-500" /> },
+  { name: 'Gulu Agri-preneurs', members: 5600, newPosts: 31, icon: <Rss className="h-5 w-5 text-amber-500" /> },
 ];
 
 export default function CommunityPage() {
@@ -41,7 +41,7 @@ export default function CommunityPage() {
               <Card key={forum.name}>
                 <CardHeader className="flex flex-row items-center justify-between">
                   <div className="flex items-center gap-4">
-                    {forum.icon}
+                    <div className="p-3 bg-primary/10 rounded-full">{forum.icon}</div>
                     <CardTitle className="font-headline text-xl">{forum.name}</CardTitle>
                   </div>
                   <Button variant="outline" size="sm">Join</Button>
