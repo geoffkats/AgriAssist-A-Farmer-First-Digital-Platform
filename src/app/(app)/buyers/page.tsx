@@ -11,6 +11,7 @@ import { Search, Phone, Mail, MessageSquare } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
+import { useToast } from '@/hooks/use-toast';
 
 const buyers = [
   {
@@ -61,6 +62,7 @@ export default function BuyersPage() {
   const [isNegotiateModalOpen, setIsNegotiateModalOpen] = useState(false);
   const [isCallModalOpen, setIsCallModalOpen] = useState(false);
   const [selectedBuyer, setSelectedBuyer] = useState<any>(null);
+  const { toast } = useToast();
 
   const openNegotiateModal = (buyer: any) => {
     setSelectedBuyer(buyer);
@@ -71,6 +73,14 @@ export default function BuyersPage() {
     setSelectedBuyer(buyer);
     setIsCallModalOpen(true);
   };
+  
+  const handleSendMessage = () => {
+    setIsNegotiateModalOpen(false);
+    toast({
+        title: "Message Sent!",
+        description: `Your negotiation request has been sent to ${selectedBuyer?.name}. This is a simulation.`
+    })
+  }
 
 
   return (
@@ -118,7 +128,7 @@ export default function BuyersPage() {
               </Button>
               <Button variant="outline" className="flex-1" onClick={() => openNegotiateModal(buyer)}>
                 <Mail className="mr-2 h-4 w-4" />
-                Negotiate
+                Email
               </Button>
             </CardFooter>
           </Card>
@@ -128,9 +138,9 @@ export default function BuyersPage() {
       <Dialog open={isNegotiateModalOpen} onOpenChange={setIsNegotiateModalOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Negotiate with {selectedBuyer?.name}</DialogTitle>
+            <DialogTitle>Send message to {selectedBuyer?.name}</DialogTitle>
             <DialogDescription>
-              Send a message to start a price negotiation. This is a simulation.
+              This will simulate sending an email to start a price negotiation. In a real app, this would be sent to their contact email.
             </DialogDescription>
           </DialogHeader>
           <div className="py-4 space-y-4">
@@ -141,9 +151,9 @@ export default function BuyersPage() {
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setIsNegotiateModalOpen(false)}>Cancel</Button>
-            <Button onClick={() => setIsNegotiateModalOpen(false)}>
+            <Button onClick={handleSendMessage}>
               <MessageSquare className="mr-2" />
-              Send Message
+              Send Email
             </Button>
           </DialogFooter>
         </DialogContent>
