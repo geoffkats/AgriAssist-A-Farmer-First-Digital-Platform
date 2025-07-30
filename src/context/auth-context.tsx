@@ -9,6 +9,7 @@ type User = {
     email: string;
     role: 'user' | 'admin';
     isPro: boolean;
+    aiCredits: number;
 };
 
 type AuthContextType = {
@@ -17,6 +18,7 @@ type AuthContextType = {
   login: (email: string, password: string) => Promise<User>;
   signup: (name: string, email: string, password: string) => Promise<void>;
   logout: () => void;
+  updateUser: (user: User) => void;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -42,6 +44,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         email: authenticatedUser.email,
         role: authenticatedUser.role,
         isPro: authenticatedUser.isPro,
+        aiCredits: authenticatedUser.aiCredits,
       };
       setUser(userData);
       sessionStorage.setItem('agriassist-user', JSON.stringify(userData));
@@ -64,8 +67,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     sessionStorage.removeItem('agriassist-user');
   };
 
+  const updateUser = (updatedUser: User) => {
+    setUser(updatedUser);
+    sessionStorage.setItem('agriassist-user', JSON.stringify(updatedUser));
+  }
+
   return (
-    <AuthContext.Provider value={{ user, loading, login, signup, logout }}>
+    <AuthContext.Provider value={{ user, loading, login, signup, logout, updateUser }}>
       {children}
     </AuthContext.Provider>
   );

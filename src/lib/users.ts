@@ -8,6 +8,7 @@ type User = {
     passwordHash: string; // In a real app, never store plain text passwords
     role: 'user' | 'admin';
     isPro: boolean;
+    aiCredits: number;
 };
 
 class UserStore {
@@ -21,6 +22,7 @@ class UserStore {
             passwordHash: this.hashPassword('adminpass'),
             role: 'admin',
             isPro: true,
+            aiCredits: Infinity,
         });
 
          // Add a default regular user
@@ -30,6 +32,7 @@ class UserStore {
             passwordHash: this.hashPassword('farmerpass'),
             role: 'user',
             isPro: false,
+            aiCredits: 15,
         });
 
         // Add a default Google user
@@ -39,6 +42,7 @@ class UserStore {
             passwordHash: this.hashPassword('googlepass'),
             role: 'user',
             isPro: false,
+            aiCredits: 15,
         });
     }
 
@@ -61,6 +65,7 @@ class UserStore {
             passwordHash: this.hashPassword(password),
             role: 'user',
             isPro: false,
+            aiCredits: 15,
         };
         this.userList.push(newUser);
         return newUser;

@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { createContext, useState, useContext, ReactNode, useEffect } from 'react';
@@ -5,35 +6,47 @@ import { useAuth } from './auth-context';
 
 type ProStatusContextType = {
   isPro: boolean;
+  aiCredits: number;
   upgradeToPro: () => void;
+  consumeCredit: () => void;
 };
 
 const ProStatusContext = createContext<ProStatusContextType | undefined>(undefined);
 
 export const ProStatusProvider = ({ children }: { children: ReactNode }) => {
   const [isPro, setIsPro] = useState(false);
-  const { user } = useAuth();
+  const { user, updateUser } = useAuth();
+  const [aiCredits, setAiCredits] = useState(user?.aiCredits || 0);
 
   useEffect(() => {
-    // Admins are always "Pro".
-    // Or if a user has upgraded, they are pro.
-    if (user?.role === 'admin' || isPro) {
-      // do nothing, they are pro
-    } else if(user?.isPro) {
-      setIsPro(true);
+    if (user) {
+        setIsPro(user.isPro);
+        setAiCredits(user.aiCredits);
     }
-  }, [user, isPro]);
-
+  }, [user]);
 
   const upgradeToPro = () => {
-    setIsPro(true);
-    // In a real app, you'd also update the user record in the database.
+    if (user) {
+        const updatedUser = { ...user, isPro: true, aiCredits: Infinity };
+        updateUser(updatedUser);
+        setIsPro(true);
+        setAiCredits(Infinity);
+    }
+  };
+
+  const consumeCredit = () => {
+    if (user && !user.isPro && aiCredits > 0) {
+        const newCredits = aiCredits - 1;
+        setAiCredits(newCredits);
+        const updatedUser = { ...user, aiCredits: newCredits };
+        updateUser(updatedUser);
+    }
   };
 
   const isProAccess = user?.role === 'admin' || isPro;
 
   return (
-    <ProStatusContext.Provider value={{ isPro: isProAccess, upgradeToPro }}>
+    <ProStatusContext.Provider value={{ isPro: isProAccess, aiCredits, upgradeToPro, consumeCredit }}>
       {children}
     </ProStatusContext.Provider>
   );

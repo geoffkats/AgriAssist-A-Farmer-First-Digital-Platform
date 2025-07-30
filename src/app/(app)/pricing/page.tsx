@@ -11,11 +11,12 @@ const freeFeatures = [
   'Access to community forums',
   'Basic knowledge guides',
   'View wallet balance & history',
+  '15 AI Credits per month',
 ];
 
 const proFeatures = [
-  'AI-powered price forecasts',
-  'AI pest & disease diagnosis',
+  'Unlimited AI price forecasts',
+  'Unlimited AI pest & disease diagnosis',
   'Advanced credit & loan access',
   'Personalized analytics dashboards',
   'Automated financial reporting',

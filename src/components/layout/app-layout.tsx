@@ -3,7 +3,7 @@
 
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { Bot, Home, Landmark, MessageSquare, BookOpen, ShoppingBasket, TrendingUp, Users, Wheat, Star, AreaChart, LogOut, User, Shield, Briefcase, Settings, Package, Banknote, MessageCircle, FileText, UserCog, Library, Truck, Group } from 'lucide-react';
+import { Bot, Home, Landmark, MessageSquare, BookOpen, ShoppingBasket, TrendingUp, Users, Wheat, Star, AreaChart, LogOut, User, Shield, Briefcase, Settings, Package, Banknote, MessageCircle, FileText, UserCog, Library, Truck, Group, Wand2 } from 'lucide-react';
 import {
   SidebarProvider,
   Sidebar,
@@ -54,7 +54,7 @@ const adminNavItems = [
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
-  const { isPro } = useProStatus();
+  const { isPro, aiCredits } = useProStatus();
   const { user, logout } = useAuth();
 
   const handleLogout = () => {
@@ -112,6 +112,22 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                 })}
               </SidebarGroup>
             ))}
+            
+            {!isPro && user?.role === 'user' && (
+              <SidebarGroup>
+                <SidebarGroupLabel>Usage</SidebarGroupLabel>
+                 <SidebarMenuItem>
+                    <SidebarMenuButton
+                      disabled
+                      tooltip={{ children: "AI Credits Remaining", side: 'right', align: 'center' }}
+                      className="cursor-default hover:bg-transparent"
+                    >
+                      <Wand2 />
+                      <span className="truncate">AI Credits: {aiCredits}</span>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+              </SidebarGroup>
+            )}
 
             <SidebarMenuItem>
                 <SidebarMenuButton

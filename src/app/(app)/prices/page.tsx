@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Bell, ArrowUp, ArrowDown, Star } from 'lucide-react';
 import PricePredictor from '@/components/price-predictor';
 import { useProStatus } from '@/context/pro-status-context';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import Link from 'next/link';
 import { predictAction } from './actions';
 
@@ -21,7 +21,7 @@ const commodityPrices = [
 ];
 
 export default function PricesPage() {
-  const { isPro } = useProStatus();
+  const { isPro, aiCredits, consumeCredit } = useProStatus();
 
   return (
     <div className="flex flex-col gap-8">
@@ -69,18 +69,31 @@ export default function PricesPage() {
           {isPro ? (
             <PricePredictor predictAction={predictAction} />
           ) : (
-            <Card className="h-full flex flex-col items-center justify-center text-center">
+            <Card className="h-full flex flex-col">
               <CardHeader>
                 <CardTitle>Unlock AI Price Forecasts</CardTitle>
+                 <CardDescription>
+                  You have <span className="font-bold text-primary">{aiCredits} AI credits</span> remaining.
+                </CardDescription>
               </CardHeader>
-              <CardContent>
-                <p className="mb-4 text-muted-foreground">Upgrade to Pro to get AI-powered price predictions and sell smarter.</p>
-                <Button asChild>
-                  <Link href="/pricing">
-                    <Star className="mr-2 h-4 w-4" />
-                    Upgrade to Pro
-                  </Link>
-                </Button>
+              <CardContent className="flex-grow">
+                {aiCredits > 0 ? (
+                  <PricePredictor predictAction={async (input) => {
+                    const result = await predictAction(input);
+                    consumeCredit();
+                    return result;
+                  }} />
+                ) : (
+                  <div className="text-center flex flex-col items-center justify-center h-full">
+                    <p className="mb-4 text-muted-foreground">You have run out of AI credits. Upgrade for unlimited forecasts.</p>
+                    <Button asChild>
+                      <Link href="/pricing">
+                        <Star className="mr-2 h-4 w-4" />
+                        Upgrade to Pro
+                      </Link>
+                    </Button>
+                  </div>
+                )}
               </CardContent>
             </Card>
           )}

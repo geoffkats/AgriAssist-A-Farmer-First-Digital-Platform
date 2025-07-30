@@ -3,7 +3,7 @@
 
 import PestIdentifier from '@/components/pest-identifier';
 import { useProStatus } from '@/context/pro-status-context';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Star } from 'lucide-react';
 import Link from 'next/link';
@@ -11,7 +11,7 @@ import { identifyAction } from './actions';
 
 
 export default function AgronomistPage() {
-  const { isPro } = useProStatus();
+  const { isPro, aiCredits, consumeCredit } = useProStatus();
 
   return (
     <div className="flex flex-col gap-8">
@@ -25,18 +25,31 @@ export default function AgronomistPage() {
         {isPro ? (
           <PestIdentifier identifyAction={identifyAction} />
         ) : (
-          <Card className="text-center">
-            <CardHeader>
-              <CardTitle>Unlock the AI Agronomist</CardTitle>
+          <Card>
+            <CardHeader className="text-center">
+              <CardTitle>AI Agronomist</CardTitle>
+               <CardDescription>
+                You have <span className="font-bold text-primary">{aiCredits} AI credits</span> remaining.
+              </CardDescription>
             </CardHeader>
             <CardContent>
-              <p className="mb-4 text-muted-foreground">This feature is available to Pro subscribers. Upgrade to get instant pest and disease diagnosis.</p>
-              <Button asChild>
-                <Link href="/pricing">
-                  <Star className="mr-2 h-4 w-4" />
-                  Upgrade to Pro
-                </Link>
-              </Button>
+              {aiCredits > 0 ? (
+                 <PestIdentifier identifyAction={async (input) => {
+                   const result = await identifyAction(input);
+                   consumeCredit();
+                   return result;
+                 }} />
+              ) : (
+                 <div className="text-center">
+                    <p className="mb-4 text-muted-foreground">You have run out of AI credits. Upgrade to Pro for unlimited AI diagnosis.</p>
+                    <Button asChild>
+                        <Link href="/pricing">
+                        <Star className="mr-2 h-4 w-4" />
+                        Upgrade to Pro
+                        </Link>
+                    </Button>
+                 </div>
+              )}
             </CardContent>
           </Card>
         )}
