@@ -29,7 +29,7 @@ const repayments = [
 
 export default function LoanManagementPage() {
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [selectedApplication, setSelectedApplication] = useState(null);
+    const [selectedApplication, setSelectedApplication] = useState<any>(null);
     const [decision, setDecision] = useState<'approve' | 'reject' | null>(null);
 
     const openModal = (app:any, action: 'approve' | 'reject' | 'view') => {
@@ -262,10 +262,10 @@ export default function LoanManagementPage() {
                         </DialogFooter>
                     ) : (
                          <div className="py-4 space-y-4">
-                            <p><strong>Farmer:</strong> {selectedApplication?.farmer}</p>
-                            <p><strong>Amount:</strong> {selectedApplication?.amount}</p>
-                            <p><strong>Purpose:</strong> {selectedApplication?.purpose}</p>
-                            <p><strong>AI Risk Assessment:</strong> <Badge variant={selectedApplication?.risk === 'Low' ? 'default' : selectedApplication?.risk === 'Medium' ? 'secondary' : 'destructive'}>{selectedApplication?.risk}</Badge></p>
+                            <div><strong>Farmer:</strong> {selectedApplication?.farmer}</div>
+                            <div><strong>Amount:</strong> {selectedApplication?.amount}</div>
+                            <div><strong>Purpose:</strong> {selectedApplication?.purpose}</div>
+                            <div><strong>AI Risk Assessment:</strong> <Badge variant={selectedApplication?.risk === 'Low' ? 'default' : selectedApplication?.risk === 'Medium' ? 'secondary' : 'destructive'}>{selectedApplication?.risk}</Badge></div>
                         </div>
                     )}
                 </DialogContent>
