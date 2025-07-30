@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Bot, LayoutDashboard, ShoppingBasket, TrendingUp, Users, Wheat } from 'lucide-react';
+import { Bot, Home, Landmark, MessageSquare, BookOpen, ShoppingBasket, TrendingUp, Users, Wheat } from 'lucide-react';
 import {
   SidebarProvider,
   Sidebar,
@@ -16,10 +16,13 @@ import {
 } from '@/components/ui/sidebar';
 
 const navItems = [
-  { href: '/', label: 'Dashboard', icon: LayoutDashboard },
-  { href: '/prices', label: 'Prices', icon: TrendingUp },
+  { href: '/', label: 'Home', icon: Home },
+  { href: '/prices', label: 'Market Prices', icon: TrendingUp },
   { href: '/marketplace', label: 'Marketplace', icon: ShoppingBasket },
-  { href: '/agronomist', label: 'AI Agronomist', icon: Bot },
+  { href: '/agronomist', label: 'Ask Synth', icon: Bot },
+  { href: '/guides', label: 'Knowledge Hub', icon: BookOpen },
+  { href: '/community', label: 'Community', icon: MessageSquare },
+  { href: '/finance', label: 'Finance', icon: Landmark },
   { href: '/buyers', label: 'Buyers', icon: Users },
 ];
 
