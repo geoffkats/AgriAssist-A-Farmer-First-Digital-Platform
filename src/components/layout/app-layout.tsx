@@ -26,28 +26,28 @@ import { Avatar, AvatarFallback } from '../ui/avatar';
 
 
 const navItems = [
-  { href: '/', label: 'Home', icon: Home, adminOnly: false, pro: false },
-  { href: '/prices', label: 'Market Prices', icon: TrendingUp, adminOnly: false, pro: false },
-  { href: '/marketplace', label: 'Marketplace', icon: ShoppingBasket, adminOnly: false, pro: false },
-  { href: '/agronomist', label: 'Ask Synth', icon: Bot, adminOnly: false, pro: false },
-  { href: '/guides', label: 'Knowledge Hub', icon: BookOpen, adminOnly: false, pro: false },
-  { href: '/community', label: 'Community', icon: MessageSquare, adminOnly: false, pro: false },
-  { href: '/finance', label: 'Finance', icon: Landmark, adminOnly: false, pro: false },
-  { href: '/buyers', label: 'Buyers', icon: Users, adminOnly: false, pro: false },
-  { href: '/analytics', label: 'Analytics', icon: AreaChart, adminOnly: false, pro: true },
+  { href: '/', label: 'Home', icon: Home, group: 'App' },
+  { href: '/prices', label: 'Market Prices', icon: TrendingUp, group: 'App' },
+  { href: '/marketplace', label: 'Marketplace', icon: ShoppingBasket, group: 'App' },
+  { href: '/agronomist', label: 'Ask Synth', icon: Bot, group: 'App' },
+  { href: '/guides', label: 'Knowledge Hub', icon: BookOpen, group: 'App' },
+  { href: '/community', label: 'Community', icon: MessageSquare, group: 'App' },
+  { href: '/finance', label: 'Finance', icon: Landmark, group: 'App' },
+  { href: '/buyers', label: 'Buyers', icon: Users, group: 'App' },
+  { href: '/analytics', label: 'Analytics', icon: AreaChart, group: 'App', pro: true },
 ];
 
 const adminNavItems = [
-    { href: '/admin/dashboard', label: 'Overview', icon: Shield, group: 'Home' },
-    { href: '/admin/farmers', label: 'Farmer Management', icon: UserCog, group: 'Management' },
-    { href: '/admin/suppliers', label: 'Suppliers & Products', icon: Package, group: 'Management' },
-    { href: '/admin/loans', label: 'Loan & Credit', icon: Banknote, group: 'Management' },
-    { href: '/admin/orders', label: 'Marketplace Orders', icon: Truck, group: 'Management' },
-    { href: '/admin/buyers', label: 'Buyer & Co-op Network', icon: Group, group: 'Management' },
-    { href: '/admin/content', label: 'Content Hub', icon: Library, group: 'Content & Comms' },
-    { href: '/admin/messaging', label: 'Messaging', icon: MessageCircle, group: 'Content & Comms' },
-    { href: '/admin/financials', label: 'Financial Control', icon: FileText, group: 'Platform' },
-    { href: '/admin/settings', label: 'Settings', icon: Settings, group: 'Platform' },
+    { href: '/admin/dashboard', label: 'Overview', icon: Shield, group: 'Admin' },
+    { href: '/admin/farmers', label: 'Farmer Management', icon: UserCog, group: 'Admin' },
+    { href: '/admin/suppliers', label: 'Suppliers & Products', icon: Package, group: 'Admin' },
+    { href: '/admin/loans', label: 'Loan & Credit', icon: Banknote, group: 'Admin' },
+    { href: '/admin/orders', label: 'Marketplace Orders', icon: Truck, group: 'Admin' },
+    { href: '/admin/buyers', label: 'Buyer & Co-op Network', icon: Group, group: 'Admin' },
+    { href: '/admin/content', label: 'Content Hub', icon: Library, group: 'Admin' },
+    { href: '/admin/messaging', label: 'Messaging', icon: MessageCircle, group: 'Admin' },
+    { href: '/admin/financials', label: 'Financial Control', icon: FileText, group: 'Admin' },
+    { href: '/admin/settings', label: 'Settings', icon: Settings, group: 'Admin' },
 ];
 
 
@@ -62,8 +62,8 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     router.push('/login');
   };
   
-  const userNavItems = navItems.filter(item => !item.adminOnly);
-  const adminGroups = [...new Set(adminNavItems.map(item => item.group))];
+  const combinedNavItems = user?.role === 'admin' ? [...navItems, ...adminNavItems] : navItems;
+  const navGroups = [...new Set(combinedNavItems.map(item => item.group))];
 
   return (
     <SidebarProvider>
@@ -90,56 +90,38 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             </SidebarGroup>
 
           <SidebarMenu>
-             {user?.role === 'admin' ? (
-                <>
-                  {adminGroups.map(group => (
-                    <SidebarGroup key={group}>
-                      <SidebarGroupLabel>{group}</SidebarGroupLabel>
-                      {adminNavItems.filter(item => item.group === group).map((item) => (
-                        <SidebarMenuItem key={item.href}>
-                          <SidebarMenuButton
-                            asChild
-                            isActive={pathname === item.href}
-                            tooltip={{ children: item.label, side: 'right', align: 'center' }}
-                          >
-                            <Link href={item.href}>
-                              <item.icon />
-                              <span className="truncate">{item.label}</span>
-                            </Link>
-                          </SidebarMenuButton>
-                        </SidebarMenuItem>
-                      ))}
-                    </SidebarGroup>
-                  ))}
-                </>
-              ) : (
-                 userNavItems.map((item) => {
+            {navGroups.map(group => (
+              <SidebarGroup key={group}>
+                <SidebarGroupLabel>{group}</SidebarGroupLabel>
+                {combinedNavItems.filter(item => item.group === group).map((item) => {
                   if (item.pro && !isPro) return null;
                   return (
-                  <SidebarMenuItem key={item.href}>
-                    <SidebarMenuButton
-                      asChild
-                      isActive={pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href))}
-                      tooltip={{ children: item.label, side: 'right', align: 'center' }}
-                    >
-                      <Link href={item.href}>
-                        <item.icon />
-                        <span className="truncate">{item.label}</span>
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                )})
-              )}
+                    <SidebarMenuItem key={item.href}>
+                      <SidebarMenuButton
+                        asChild
+                        isActive={pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href))}
+                        tooltip={{ children: item.label, side: 'right', align: 'center' }}
+                      >
+                        <Link href={item.href}>
+                          <item.icon />
+                          <span className="truncate">{item.label}</span>
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  )
+                })}
+              </SidebarGroup>
+            ))}
 
-              <SidebarMenuItem>
-                 <SidebarMenuButton
-                    onClick={handleLogout}
-                    tooltip={{ children: "Logout", side: 'right', align: 'center' }}
-                  >
-                    <LogOut />
-                    <span className="truncate">Logout</span>
-                  </SidebarMenuButton>
-              </SidebarMenuItem>
+            <SidebarMenuItem>
+                <SidebarMenuButton
+                  onClick={handleLogout}
+                  tooltip={{ children: "Logout", side: 'right', align: 'center' }}
+                >
+                  <LogOut />
+                  <span className="truncate">Logout</span>
+                </SidebarMenuButton>
+            </SidebarMenuItem>
           </SidebarMenu>
         </SidebarContent>
         <SidebarFooter>
