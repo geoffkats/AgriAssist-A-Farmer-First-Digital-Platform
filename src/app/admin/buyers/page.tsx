@@ -1,14 +1,15 @@
 
 'use client';
 
-import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card';
+import { Card, CardHeader, CardTitle, CardContent, CardDescription, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Search, Plus, MoreHorizontal, CheckCircle, ShieldCheck, Download } from 'lucide-react';
+import { Search, Plus, MoreHorizontal, CheckCircle, ShieldCheck, Download, Users, Target, Tractor } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { Progress } from '@/components/ui/progress';
 
 const buyers = [
     { id: 'BUY001', name: 'Kampala Agro Processors', contact: 'procurement@kpl-agro.com', type: 'Processor', status: 'Verified', trades: 124, crops: 'Maize, Beans' },
@@ -16,6 +17,32 @@ const buyers = [
     { id: 'BUY003', name: 'Mbarara Fresh Produce', contact: 'fresh@mbarara.co', type: 'Aggregator', status: 'Pending', trades: 0, crops: 'Matooke, Cassava' },
     { id: 'BUY004', name: 'Northern Grain Co-op', contact: 'info@ngc.coop', type: 'Co-operative', status: 'Verified', trades: 212, crops: 'Millet, Sorghum' },
 ];
+
+const cooperatives = [
+  {
+    name: 'Mityana Central Growers Co-op',
+    members: 152,
+    yieldTarget: 500, // in tons
+    yieldAchieved: 480, // in tons
+    sharedOrders: [
+      { id: 'CO-ORD-01', item: 'NPK Fertilizer', quantity: '200 bags', status: 'Delivered' },
+      { id: 'CO-ORD-02', item: 'Maize Seeds (Longe 5)', quantity: '500 kg', status: 'Shipped' },
+    ],
+    farmers: ['John Mubiru', 'Aisha Nakato', 'Peter Okello']
+  },
+  {
+    name: 'Gulu Northern Farmers Alliance',
+    members: 210,
+    yieldTarget: 800,
+    yieldAchieved: 750,
+    sharedOrders: [
+      { id: 'CO-ORD-03', item: 'Urea Fertilizer', quantity: '300 bags', status: 'Delivered' },
+       { id: 'CO-ORD-04', item: 'Tractors (Lease)', quantity: '5 units', status: 'Active' },
+    ],
+    farmers: ['Maria Akello', 'David Lumu', 'Grace Adongo']
+  },
+];
+
 
 export default function BuyerManagementPage() {
     return (
@@ -36,7 +63,7 @@ export default function BuyerManagementPage() {
                           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                           <Input placeholder="Search..." className="pl-10" />
                         </div>
-                        <Button><Plus className="mr-2"/> Add New Buyer</Button>
+                        <Button><Plus className="mr-2"/> Add New</Button>
                     </div>
                 </div>
 
@@ -85,15 +112,50 @@ export default function BuyerManagementPage() {
                         </CardContent>
                     </Card>
                 </TabsContent>
-                <TabsContent value="co-ops" className="mt-4">
-                     <Card className="flex flex-col items-center justify-center min-h-[400px]">
-                        <CardHeader>
-                            <CardTitle>Co-operative Management</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <p className="text-muted-foreground">Co-op features coming soon.</p>
-                        </CardContent>
-                    </Card>
+                <TabsContent value="co-ops" className="mt-4 grid gap-6 md:grid-cols-2">
+                     {cooperatives.map(coop => (
+                         <Card key={coop.name}>
+                            <CardHeader>
+                                <CardTitle className="font-headline">{coop.name}</CardTitle>
+                                <CardDescription className="flex items-center gap-2">
+                                    <Users className="h-4 w-4" /> {coop.members} members
+                                </CardDescription>
+                            </CardHeader>
+                            <CardContent className="space-y-6">
+                                <div>
+                                    <div className="flex justify-between items-end mb-1">
+                                        <h4 className="text-sm font-semibold flex items-center gap-2"><Target className="h-4 w-4 text-primary" /> Yield Performance</h4>
+                                        <p className="text-sm font-bold">{coop.yieldAchieved} / <span className="text-xs text-muted-foreground font-normal">{coop.yieldTarget} tons</span></p>
+                                    </div>
+                                    <Progress value={(coop.yieldAchieved / coop.yieldTarget) * 100} />
+                                </div>
+                                 <div>
+                                    <h4 className="text-sm font-semibold flex items-center gap-2 mb-2"><Tractor className="h-4 w-4 text-primary" /> Shared Input Orders</h4>
+                                    <Table>
+                                        <TableHeader>
+                                            <TableRow>
+                                                <TableHead>Item</TableHead>
+                                                <TableHead>Qty</TableHead>
+                                                <TableHead>Status</TableHead>
+                                            </TableRow>
+                                        </TableHeader>
+                                        <TableBody>
+                                            {coop.sharedOrders.map(order => (
+                                                <TableRow key={order.id}>
+                                                    <TableCell className="font-medium">{order.item}</TableCell>
+                                                    <TableCell>{order.quantity}</TableCell>
+                                                    <TableCell><Badge variant="secondary">{order.status}</Badge></TableCell>
+                                                </TableRow>
+                                            ))}
+                                        </TableBody>
+                                    </Table>
+                                 </div>
+                            </CardContent>
+                            <CardFooter>
+                                 <Button variant="outline" className="w-full">View Co-op Details</Button>
+                            </CardFooter>
+                        </Card>
+                     ))}
                 </TabsContent>
             </Tabs>
         </div>
