@@ -1,8 +1,9 @@
+
 'use client';
 
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { Bot, Home, Landmark, MessageSquare, BookOpen, ShoppingBasket, TrendingUp, Users, Wheat, Star, AreaChart, LogOut, User, Shield } from 'lucide-react';
+import { Bot, Home, Landmark, MessageSquare, BookOpen, ShoppingBasket, TrendingUp, Users, Wheat, Star, AreaChart, LogOut, User, Shield, Briefcase, Settings, Package, Banknote, MessageCircle, FileText, UserCog, Library, Truck, Group } from 'lucide-react';
 import {
   SidebarProvider,
   Sidebar,
@@ -25,17 +26,30 @@ import { Avatar, AvatarFallback } from '../ui/avatar';
 
 
 const navItems = [
-  { href: '/', label: 'Home', icon: Home, admin: false },
-  { href: '/prices', label: 'Market Prices', icon: TrendingUp, admin: false },
-  { href: '/marketplace', label: 'Marketplace', icon: ShoppingBasket, admin: false },
-  { href: '/agronomist', label: 'Ask Synth', icon: Bot, admin: false },
-  { href: '/guides', label: 'Knowledge Hub', icon: BookOpen, admin: false },
-  { href: '/community', label: 'Community', icon: MessageSquare, admin: false },
-  { href: '/finance', label: 'Finance', icon: Landmark, admin: false },
-  { href: '/buyers', label: 'Buyers', icon: Users, admin: false },
-  { href: '/analytics', label: 'Analytics', icon: AreaChart, pro: true, admin: false },
-  { href: '/admin/dashboard', label: 'Admin Dashboard', icon: Shield, admin: true},
+  { href: '/', label: 'Home', icon: Home, adminOnly: false, pro: false },
+  { href: '/prices', label: 'Market Prices', icon: TrendingUp, adminOnly: false, pro: false },
+  { href: '/marketplace', label: 'Marketplace', icon: ShoppingBasket, adminOnly: false, pro: false },
+  { href: '/agronomist', label: 'Ask Synth', icon: Bot, adminOnly: false, pro: false },
+  { href: '/guides', label: 'Knowledge Hub', icon: BookOpen, adminOnly: false, pro: false },
+  { href: '/community', label: 'Community', icon: MessageSquare, adminOnly: false, pro: false },
+  { href: '/finance', label: 'Finance', icon: Landmark, adminOnly: false, pro: false },
+  { href: '/buyers', label: 'Buyers', icon: Users, adminOnly: false, pro: false },
+  { href: '/analytics', label: 'Analytics', icon: AreaChart, adminOnly: false, pro: true },
 ];
+
+const adminNavItems = [
+    { href: '/admin/dashboard', label: 'Overview', icon: Shield, group: 'Home' },
+    { href: '/admin/farmers', label: 'Farmer Management', icon: UserCog, group: 'Management' },
+    { href: '/admin/suppliers', label: 'Suppliers & Products', icon: Package, group: 'Management' },
+    { href: '/admin/loans', label: 'Loan & Credit', icon: Banknote, group: 'Management' },
+    { href: '/admin/orders', label: 'Marketplace Orders', icon: Truck, group: 'Management' },
+    { href: '/admin/buyers', label: 'Buyer & Co-op Network', icon: Group, group: 'Management' },
+    { href: '/admin/content', label: 'Content Hub', icon: Library, group: 'Content & Comms' },
+    { href: '/admin/messaging', label: 'Messaging', icon: MessageCircle, group: 'Content & Comms' },
+    { href: '/admin/financials', label: 'Financial Control', icon: FileText, group: 'Platform' },
+    { href: '/admin/settings', label: 'Settings', icon: Settings, group: 'Platform' },
+];
+
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -48,8 +62,8 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     router.push('/login');
   };
   
-  const userNavItems = navItems.filter(item => !item.admin);
-  const adminNavItems = navItems.filter(item => item.admin);
+  const userNavItems = navItems.filter(item => !item.adminOnly);
+  const adminGroups = [...new Set(adminNavItems.map(item => item.group))];
 
   return (
     <SidebarProvider>
@@ -69,7 +83,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                   </Avatar>
                   <div className="flex flex-col group-data-[collapsible=icon]:hidden">
                     <span className="text-sm font-semibold">{user.name}</span>
-                    <span className="text-xs text-muted-foreground">{user.role}</span>
+                    <span className="text-xs text-muted-foreground capitalize">{user.role}</span>
                   </div>
                 </div>
               )}
@@ -78,42 +92,25 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           <SidebarMenu>
              {user?.role === 'admin' ? (
                 <>
-                  <SidebarGroup>
-                    <SidebarGroupLabel>Admin</SidebarGroupLabel>
-                    {adminNavItems.map((item) => (
-                      <SidebarMenuItem key={item.href}>
-                        <SidebarMenuButton
-                          asChild
-                          isActive={pathname === item.href}
-                          tooltip={{ children: item.label, side: 'right', align: 'center' }}
-                        >
-                          <Link href={item.href}>
-                            <item.icon />
-                            <span className="truncate">{item.label}</span>
-                          </Link>
-                        </SidebarMenuButton>
-                      </SidebarMenuItem>
-                    ))}
-                  </SidebarGroup>
-                  <SidebarGroup>
-                    <SidebarGroupLabel>User View</SidebarGroupLabel>
-                     {userNavItems.map((item) => {
-                      if (item.pro && !isPro) return null;
-                      return (
-                      <SidebarMenuItem key={item.href}>
-                        <SidebarMenuButton
-                          asChild
-                          isActive={pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href))}
-                          tooltip={{ children: item.label, side: 'right', align: 'center' }}
-                        >
-                          <Link href={item.href}>
-                            <item.icon />
-                            <span className="truncate">{item.label}</span>
-                          </Link>
-                        </SidebarMenuButton>
-                      </SidebarMenuItem>
-                    )})}
-                  </SidebarGroup>
+                  {adminGroups.map(group => (
+                    <SidebarGroup key={group}>
+                      <SidebarGroupLabel>{group}</SidebarGroupLabel>
+                      {adminNavItems.filter(item => item.group === group).map((item) => (
+                        <SidebarMenuItem key={item.href}>
+                          <SidebarMenuButton
+                            asChild
+                            isActive={pathname === item.href}
+                            tooltip={{ children: item.label, side: 'right', align: 'center' }}
+                          >
+                            <Link href={item.href}>
+                              <item.icon />
+                              <span className="truncate">{item.label}</span>
+                            </Link>
+                          </SidebarMenuButton>
+                        </SidebarMenuItem>
+                      ))}
+                    </SidebarGroup>
+                  ))}
                 </>
               ) : (
                  userNavItems.map((item) => {
