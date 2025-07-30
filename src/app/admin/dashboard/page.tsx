@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip } from 'recharts';
 import { BarChart, Users, ShoppingCart, Banknote, AlertTriangle } from 'lucide-react';
 import { users as appUsers } from '@/lib/users';
+import UgandaMap from '@/components/uganda-map';
 
 
 const kpiData = [
@@ -23,6 +24,13 @@ const userGrowthData = [
   { name: 'Jun', users: 800 },
   { name: 'Jul', users: 1245 },
 ];
+
+const regionData = {
+    'Central': 85,
+    'Eastern': 70,
+    'Northern': 50,
+    'Western': 65,
+};
 
 
 export default function AdminDashboardPage() {
@@ -77,10 +85,10 @@ export default function AdminDashboardPage() {
         <Card>
             <CardHeader>
                 <CardTitle>Activity Heatmap</CardTitle>
-                <CardDescription>Coming soon: Top performing regions by activity.</CardDescription>
+                <CardDescription>Top performing regions by user activity.</CardDescription>
             </CardHeader>
-            <CardContent className="flex items-center justify-center h-[300px] bg-secondary/50 rounded-md">
-                <p className="text-muted-foreground">Map visualization placeholder</p>
+            <CardContent className="flex items-center justify-center h-[300px] p-0">
+                <UgandaMap data={regionData} />
             </CardContent>
         </Card>
       </div>
