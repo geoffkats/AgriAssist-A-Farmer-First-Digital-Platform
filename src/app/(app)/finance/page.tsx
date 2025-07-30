@@ -1,11 +1,16 @@
 
 'use client';
 
+import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ArrowUpRight, ArrowDownLeft, Landmark, Plus, Receipt, Star } from 'lucide-react';
+import { ArrowUpRight, ArrowDownLeft, Landmark, Plus, Receipt, Star, Wallet, CheckCircle } from 'lucide-react';
 import { useProStatus } from '@/context/pro-status-context';
 import Link from 'next/link';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+import { useToast } from '@/hooks/use-toast';
 
 const transactions = [
     { type: 'Market Sale', amount: 450000, date: '2024-07-20', direction: 'in' },
@@ -16,6 +21,25 @@ const transactions = [
 
 export default function FinancePage() {
   const { isPro } = useProStatus();
+  const [isAddMoneyModalOpen, setIsAddMoneyModalOpen] = useState(false);
+  const [isLoanModalOpen, setIsLoanModalOpen] = useState(false);
+  const { toast } = useToast();
+
+  const handleAddMoney = () => {
+    setIsAddMoneyModalOpen(false);
+    toast({
+        title: "Success!",
+        description: "UGX 50,000 has been added to your wallet. This is a simulation.",
+    });
+  }
+  
+  const handleApplyLoan = () => {
+    setIsLoanModalOpen(false);
+    toast({
+        title: "Application Submitted",
+        description: "Your loan application has been received and is under review. This is a simulation.",
+    });
+  }
 
   return (
     <div className="flex flex-col gap-8">
@@ -28,10 +52,10 @@ export default function FinancePage() {
         <Card className="md:col-span-2">
             <CardHeader className="flex flex-row items-center justify-between">
                 <div>
-                    <CardTitle>My Wallet</CardTitle>
+                    <CardTitle className="flex items-center gap-2 font-headline"><Wallet /> My Wallet</CardTitle>
                     <CardDescription>MTN Mobile Money</CardDescription>
                 </div>
-                <Button variant="outline" size="sm">
+                <Button variant="outline" size="sm" onClick={() => setIsAddMoneyModalOpen(true)}>
                     <Plus className="mr-2 h-4 w-4" />
                     Add Money
                 </Button>
@@ -52,7 +76,7 @@ export default function FinancePage() {
                     <p className="text-2xl font-bold">UGX 2,000,000</p>
                 </CardContent>
                 <CardFooter>
-                    <Button className="w-full">
+                    <Button className="w-full" onClick={() => setIsLoanModalOpen(true)}>
                         <Landmark className="mr-2 h-4 w-4" />
                         Apply for Loan
                     </Button>
@@ -64,7 +88,7 @@ export default function FinancePage() {
                     <CardTitle className="font-headline">Unlock Agri-Credit</CardTitle>
                     <CardDescription>Upgrade to Pro to apply for loans.</CardDescription>
                 </CardHeader>
-                <CardContent className="flex-grow">
+                <CardContent className="flex-grow flex items-center">
                     <Button asChild>
                         <Link href="/pricing">
                             <Star className="mr-2 h-4 w-4" />
@@ -84,7 +108,7 @@ export default function FinancePage() {
         <CardContent>
           <div className="space-y-4">
             {transactions.map((tx, index) => (
-              <div key={index} className="flex items-center justify-between">
+              <div key={index} className="flex items-center justify-between p-3 rounded-lg hover:bg-muted/50">
                 <div className="flex items-center gap-4">
                   <div className={`p-2 rounded-full ${tx.direction === 'in' ? 'bg-green-100 dark:bg-green-900' : 'bg-red-100 dark:bg-red-900'}`}>
                     {tx.direction === 'in' ? <ArrowDownLeft className="h-5 w-5 text-green-500" /> : <ArrowUpRight className="h-5 w-5 text-red-500" />}
@@ -110,6 +134,65 @@ export default function FinancePage() {
             </Button>
         </CardFooter>
       </Card>
+      
+      {/* Add Money Modal */}
+      <Dialog open={isAddMoneyModalOpen} onOpenChange={setIsAddMoneyModalOpen}>
+        <DialogContent>
+            <DialogHeader>
+                <DialogTitle>Add Money to Wallet</DialogTitle>
+                <DialogDescription>
+                  Enter the amount and confirm to top-up your wallet. This is a simulation.
+                </DialogDescription>
+            </DialogHeader>
+            <div className="py-4 space-y-4">
+                 <div className="space-y-2">
+                    <Label htmlFor="amount">Amount (UGX)</Label>
+                    <Input id="amount" type="number" placeholder="e.g., 50000" defaultValue="50000"/>
+                </div>
+                 <div className="space-y-2">
+                    <Label>Payment Method</Label>
+                    <p className="text-sm font-semibold p-3 border rounded-md">MTN Mobile Money: ***-***-**25</p>
+                </div>
+            </div>
+            <DialogFooter>
+                <Button variant="outline" onClick={() => setIsAddMoneyModalOpen(false)}>Cancel</Button>
+                <Button onClick={handleAddMoney}>
+                    <CheckCircle className="mr-2 h-4 w-4" />
+                    Confirm & Add UGX 50,000
+                </Button>
+            </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Apply for Loan Modal */}
+       <Dialog open={isLoanModalOpen} onOpenChange={setIsLoanModalOpen}>
+        <DialogContent>
+            <DialogHeader>
+                <DialogTitle>Apply for Agri-Credit</DialogTitle>
+                <DialogDescription>
+                  Fill in the details below to apply for a loan. Your application will be reviewed by our team.
+                </DialogDescription>
+            </DialogHeader>
+            <div className="py-4 space-y-4">
+                 <div className="space-y-2">
+                    <Label htmlFor="loan-amount">Loan Amount (UGX)</Label>
+                    <Input id="loan-amount" type="number" placeholder="e.g., 500000" defaultValue="500000"/>
+                </div>
+                 <div className="space-y-2">
+                    <Label htmlFor="loan-purpose">Loan Purpose</Label>
+                    <Input id="loan-purpose" placeholder="e.g., Purchase of certified maize seeds"/>
+                </div>
+            </div>
+            <DialogFooter>
+                <Button variant="outline" onClick={() => setIsLoanModalOpen(false)}>Cancel</Button>
+                <Button onClick={handleApplyLoan}>
+                    <Landmark className="mr-2 h-4 w-4" />
+                    Submit Application
+                </Button>
+            </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
     </div>
   );
 }
