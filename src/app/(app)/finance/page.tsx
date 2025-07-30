@@ -12,6 +12,7 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 
 const transactions = [
     { type: 'Market Sale', amount: 450000, date: '2024-07-20', direction: 'in' },
@@ -141,26 +142,33 @@ export default function FinancePage() {
           <CardDescription>Your latest financial activities.</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="space-y-4">
-            {transactions.map((tx, index) => (
-              <div key={index} className="flex items-center justify-between p-3 rounded-lg hover:bg-muted/50">
-                <div className="flex items-center gap-4">
-                  <div className={`p-2 rounded-full ${tx.direction === 'in' ? 'bg-green-100 dark:bg-green-900' : 'bg-red-100 dark:bg-red-900'}`}>
-                    {tx.direction === 'in' ? <ArrowDownLeft className="h-5 w-5 text-green-500" /> : <ArrowUpRight className="h-5 w-5 text-red-500" />}
-                  </div>
-                  <div>
-                    <p className="font-semibold">{tx.type}</p>
-                    <p className="text-sm text-muted-foreground">{tx.date}</p>
-                  </div>
-                </div>
-                <div className="text-right">
-                    <p className={`font-bold ${tx.direction === 'in' ? 'text-green-600' : 'text-destructive'}`}>
-                        {tx.direction === 'out' ? '-' : ''}UGX {Math.abs(tx.amount).toLocaleString()}
-                    </p>
-                </div>
-              </div>
-            ))}
-          </div>
+           <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Type</TableHead>
+                <TableHead>Date</TableHead>
+                <TableHead className="text-right">Amount</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {transactions.map((tx, index) => (
+                <TableRow key={index}>
+                  <TableCell>
+                    <div className="flex items-center gap-3">
+                       <div className={`p-1.5 rounded-full ${tx.direction === 'in' ? 'bg-green-500/10' : 'bg-red-500/10'}`}>
+                         {tx.direction === 'in' ? <ArrowDownLeft className="h-4 w-4 text-green-500" /> : <ArrowUpRight className="h-4 w-4 text-red-500" />}
+                       </div>
+                       <span className="font-medium">{tx.type}</span>
+                    </div>
+                  </TableCell>
+                  <TableCell className="text-muted-foreground">{tx.date}</TableCell>
+                  <TableCell className={`text-right font-semibold ${tx.direction === 'in' ? 'text-green-600' : 'text-destructive'}`}>
+                    {tx.direction === 'out' ? '-' : '+'}UGX {Math.abs(tx.amount).toLocaleString()}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
         </CardContent>
         <CardFooter className="justify-end gap-2">
             <Button variant="outline">
@@ -288,4 +296,3 @@ export default function FinancePage() {
     </div>
   );
 }
-
