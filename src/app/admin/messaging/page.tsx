@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Checkbox } from '@/components/ui/checkbox';
 import { Send, Bell, Inbox, User, MapPin, Wheat } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Badge } from '@/components/ui/badge';
 
 const supportTickets = [
     { id: 'TKT-5432', subject: 'My fertilizer order is late', user: 'John Mubiru', status: 'Open', date: '2024-07-21' },
