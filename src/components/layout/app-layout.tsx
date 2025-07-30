@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Bot, Home, Landmark, MessageSquare, BookOpen, ShoppingBasket, TrendingUp, Users, Wheat, Star } from 'lucide-react';
+import { Bot, Home, Landmark, MessageSquare, BookOpen, ShoppingBasket, TrendingUp, Users, Wheat, Star, AreaChart } from 'lucide-react';
 import {
   SidebarProvider,
   Sidebar,
@@ -16,7 +16,7 @@ import {
   SidebarFooter,
 } from '@/components/ui/sidebar';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { useProStatus } from '@/context/pro-status-context';
 
 const navItems = [
@@ -28,6 +28,7 @@ const navItems = [
   { href: '/community', label: 'Community', icon: MessageSquare },
   { href: '/finance', label: 'Finance', icon: Landmark },
   { href: '/buyers', label: 'Buyers', icon: Users },
+  { href: '/analytics', label: 'Analytics', icon: AreaChart, pro: true },
 ];
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
@@ -45,7 +46,9 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         </SidebarHeader>
         <SidebarContent>
           <SidebarMenu>
-            {navItems.map((item) => (
+            {navItems.map((item) => {
+              if (item.pro && !isPro) return null;
+              return (
               <SidebarMenuItem key={item.href}>
                 <SidebarMenuButton
                   asChild
@@ -58,7 +61,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
-            ))}
+            )})}
           </SidebarMenu>
         </SidebarContent>
         <SidebarFooter>
@@ -89,7 +92,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           )}
         </SidebarFooter>
       </Sidebar>
-      <SidebarInset>
+      <SidebarInset suppressHydrationWarning>
         <div className="p-4 sm:p-6 lg:p-8 !pt-0 min-h-screen">
           <header className="sticky top-0 z-10 flex items-center h-16 bg-background/80 backdrop-blur-sm md:hidden mb-4 -mx-4 px-4 border-b">
              <SidebarTrigger />
