@@ -14,13 +14,12 @@ const freeFeatures = [
 ];
 
 const proFeatures = [
-  'Advanced Analytics & Reporting',
-  'Precision-Ag Integrations',
-  'Automated Supply-Chain Tools',
-  'Premium Finance & Insurance',
-  'Market-Access Premiums',
-  'Concierge & Support Services',
-  'White-Label & API Access',
+  'AI-powered price forecasts',
+  'AI pest & disease diagnosis',
+  'Advanced credit & loan access',
+  'Personalized analytics dashboards',
+  'Automated financial reporting',
+  'Premium agronomy guides',
 ];
 
 export default function PricingPage() {
