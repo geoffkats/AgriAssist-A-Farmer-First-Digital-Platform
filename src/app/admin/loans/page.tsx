@@ -1,14 +1,17 @@
 
 'use client';
 
-import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card';
+import { Card, CardHeader, CardTitle, CardContent, CardDescription, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Search, CheckCircle, XCircle, MoreHorizontal, FileText, Download } from 'lucide-react';
+import { Search, CheckCircle, XCircle, MoreHorizontal, FileText, Download, SlidersHorizontal } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { Label } from '@/components/ui/label';
+import { Switch } from '@/components/ui/switch';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 const applications = [
     { id: 'LOAN-0721', farmer: 'John Mubiru', amount: 'UGX 1,500,000', purpose: 'Maize Seeds & Fertilizer', risk: 'Low', status: 'Pending', date: '2024-07-21' },
@@ -133,13 +136,85 @@ export default function LoanManagementPage() {
                     </Card>
                 </TabsContent>
                 <TabsContent value="settings" className="mt-4">
-                     <Card>
+                    <Card>
                         <CardHeader>
-                            <CardTitle>Credit Settings</CardTitle>
-                            <CardDescription>Configure the rules for the AI-powered credit scoring model.</CardDescription>
+                            <CardTitle>Credit Scoring Model Configuration</CardTitle>
+                            <CardDescription>Adjust the parameters for the AI-powered loan risk assessment model.</CardDescription>
                         </CardHeader>
-                        <CardContent className="space-y-4">
-                            <p>Credit settings UI coming soon...</p>
+                        <CardContent className="grid gap-6 md:grid-cols-2">
+                             <Card>
+                                <CardHeader>
+                                    <CardTitle className="text-lg font-headline flex items-center gap-2">
+                                        <SlidersHorizontal className="text-primary"/>
+                                        Financial Parameters
+                                    </CardTitle>
+                                </CardHeader>
+                                <CardContent className="space-y-4">
+                                    <div className="space-y-2">
+                                        <Label htmlFor="interest-rate">Base Interest Rate (%)</Label>
+                                        <Input id="interest-rate" defaultValue="18.5" type="number" />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label htmlFor="lti-ratio">Max Loan-to-Income Ratio (%)</Label>
+                                        <Input id="lti-ratio" defaultValue="35" type="number" />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label htmlFor="repayment-cycle">Default Repayment Cycle</Label>
+                                        <Select defaultValue="monthly">
+                                            <SelectTrigger id="repayment-cycle">
+                                                <SelectValue placeholder="Select cycle" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectItem value="monthly">Monthly</SelectItem>
+                                                <SelectItem value="quarterly">Quarterly</SelectItem>
+                                                <SelectItem value="biannually">Bi-Annually</SelectItem>
+                                                <SelectItem value="bullet">Bullet (End of Term)</SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+                                     <div className="space-y-2">
+                                        <Label htmlFor="grace-period">Grace Period (days)</Label>
+                                        <Input id="grace-period" defaultValue="30" type="number" />
+                                    </div>
+                                </CardContent>
+                                <CardFooter>
+                                    <Button>Save Financial Rules</Button>
+                                </CardFooter>
+                            </Card>
+                             <Card>
+                                <CardHeader>
+                                    <CardTitle className="text-lg font-headline flex items-center gap-2">
+                                        <SlidersHorizontal className="text-primary"/>
+                                        AI Model Factors
+                                    </CardTitle>
+                                    <CardDescription>Enable or disable data points used in risk scoring.</CardDescription>
+                                </CardHeader>
+                                <CardContent className="space-y-4">
+                                    <div className="flex items-center justify-between p-3 border rounded-lg">
+                                        <Label htmlFor="tx-history">Use In-App Transaction History</Label>
+                                        <Switch id="tx-history" defaultChecked />
+                                    </div>
+                                     <div className="flex items-center justify-between p-3 border rounded-lg">
+                                        <Label htmlFor="yield-data">Use Farmer-Logged Yield Data</Label>
+                                        <Switch id="yield-data" defaultChecked />
+                                    </div>
+                                     <div className="flex items-center justify-between p-3 border rounded-lg">
+                                        <Label htmlFor="pro-status">Weight Pro Subscription Status</Label>
+                                        <Switch id="pro-status" defaultChecked />
+                                    </div>
+                                    <div className="flex items-center justify-between p-3 border rounded-lg">
+                                        <Label htmlFor="coop-membership">Weight Co-operative Membership</Label>
+                                        <Switch id="coop-membership" />
+                                    </div>
+                                    <div className="flex items-center justify-between p-3 border rounded-lg">
+                                        <Label htmlFor="crb-check">Enable External CRB Check (API)</Label>
+                                        <Switch id="crb-check" />
+                                    </div>
+                                </CardContent>
+                                <CardFooter>
+                                    <Button>Save Model Weights</Button>
+                                </CardFooter>
+                            </Card>
                         </CardContent>
                     </Card>
                 </TabsContent>
