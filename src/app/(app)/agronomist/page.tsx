@@ -2,20 +2,17 @@
 'use client';
 
 import PestIdentifier from '@/components/pest-identifier';
-import { identifyPestDisease, type IdentifyPestDiseaseInput } from '@/ai/flows/identify-pest-disease';
 import { useProStatus } from '@/context/pro-status-context';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Star } from 'lucide-react';
 import Link from 'next/link';
+import { identifyAction } from './actions';
+
 
 export default function AgronomistPage() {
   const { isPro } = useProStatus();
 
-  async function identifyAction(input: IdentifyPestDiseaseInput) {
-    'use server';
-    return await identifyPestDisease(input);
-  }
   return (
     <div className="flex flex-col gap-8">
       <header className="text-center">

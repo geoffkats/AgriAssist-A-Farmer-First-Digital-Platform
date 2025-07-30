@@ -6,10 +6,10 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Bell, ArrowUp, ArrowDown, Star } from 'lucide-react';
 import PricePredictor from '@/components/price-predictor';
-import { predictPriceTrends, type PredictPriceTrendsInput } from '@/ai/flows/predict-price-trends';
 import { useProStatus } from '@/context/pro-status-context';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import Link from 'next/link';
+import { predictAction } from './actions';
 
 const commodityPrices = [
   { name: 'Maize', price: 1250, unit: 'UGX/kg', change: 2.5, trend: 'up' },
@@ -22,11 +22,6 @@ const commodityPrices = [
 
 export default function PricesPage() {
   const { isPro } = useProStatus();
-
-  async function predictAction(input: PredictPriceTrendsInput) {
-    'use server';
-    return await predictPriceTrends(input);
-  }
 
   return (
     <div className="flex flex-col gap-8">
