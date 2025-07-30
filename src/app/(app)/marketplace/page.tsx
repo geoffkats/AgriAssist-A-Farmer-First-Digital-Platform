@@ -1,10 +1,15 @@
+
+'use client';
+
+import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Search, ShoppingCart } from 'lucide-react';
+import { Search, ShoppingCart, CheckCircle } from 'lucide-react';
 import Image from 'next/image';
 import { Badge } from '@/components/ui/badge';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 
 const products = [
   { name: 'Certified Maize Seeds (Longe 5)', category: 'seeds', price: '15,000 UGX/kg', rating: 4.8, image: 'https://placehold.co/400x300', hint: 'maize seeds' },
@@ -18,6 +23,14 @@ const products = [
 ];
 
 export default function MarketplacePage() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState<any>(null);
+
+  const handleAddToCart = (product: any) => {
+    setSelectedProduct(product);
+    setIsModalOpen(true);
+  }
+
   return (
     <div className="flex flex-col gap-8">
       <header>
@@ -56,7 +69,7 @@ export default function MarketplacePage() {
             </CardContent>
             <CardFooter className="flex items-center justify-between">
               <p className="font-bold text-lg">{product.price}</p>
-              <Button>
+              <Button onClick={() => handleAddToCart(product)}>
                 <ShoppingCart className="mr-2 h-4 w-4" />
                 Add
               </Button>
@@ -64,6 +77,21 @@ export default function MarketplacePage() {
           </Card>
         ))}
       </div>
+
+      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2"><CheckCircle className="text-green-500"/> Item Added to Cart</DialogTitle>
+            <DialogDescription>
+              Successfully added <span className="font-semibold">{selectedProduct?.name}</span> to your shopping cart.
+            </DialogDescription>
+          </DialogHeader>
+           <DialogFooter>
+            <Button variant="outline" onClick={() => setIsModalOpen(false)}>Continue Shopping</Button>
+            <Button onClick={() => setIsModalOpen(false)}>Go to Cart</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

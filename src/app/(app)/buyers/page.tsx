@@ -1,10 +1,16 @@
 
+'use client';
+
+import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
-import { Search, Phone, Mail } from 'lucide-react';
+import { Search, Phone, Mail, MessageSquare } from 'lucide-react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
+import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
 
 const buyers = [
   {
@@ -52,6 +58,21 @@ const buyers = [
 ];
 
 export default function BuyersPage() {
+  const [isNegotiateModalOpen, setIsNegotiateModalOpen] = useState(false);
+  const [isCallModalOpen, setIsCallModalOpen] = useState(false);
+  const [selectedBuyer, setSelectedBuyer] = useState<any>(null);
+
+  const openNegotiateModal = (buyer: any) => {
+    setSelectedBuyer(buyer);
+    setIsNegotiateModalOpen(true);
+  };
+
+  const openCallModal = (buyer: any) => {
+    setSelectedBuyer(buyer);
+    setIsCallModalOpen(true);
+  };
+
+
   return (
     <div className="flex flex-col gap-8">
       <header>
@@ -69,7 +90,7 @@ export default function BuyersPage() {
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {buyers.map((buyer) => (
-          <Card key={buyer.name}>
+          <Card key={buyer.name} className="flex flex-col">
             <CardHeader>
               <div className="flex items-start gap-4">
                 <Avatar className="h-16 w-16">
@@ -77,12 +98,12 @@ export default function BuyersPage() {
                   <AvatarFallback className="text-xl font-bold">{buyer.initials}</AvatarFallback>
                 </Avatar>
                 <div>
-                  <CardTitle className="font-headline">{buyer.name}</CardTitle>
+                  <CardTitle className="font-headline text-2xl">{buyer.name}</CardTitle>
                   <p className="text-sm text-muted-foreground">{buyer.location}</p>
                 </div>
               </div>
             </CardHeader>
-            <CardContent>
+            <CardContent className="flex-grow">
               <p className="text-sm font-semibold mb-2">Looking for:</p>
               <div className="flex flex-wrap gap-2">
                 {buyer.crops.map((crop) => (
@@ -91,11 +112,11 @@ export default function BuyersPage() {
               </div>
             </CardContent>
             <CardFooter className="flex gap-2">
-              <Button className="flex-1">
+              <Button className="flex-1" onClick={() => openCallModal(buyer)}>
                 <Phone className="mr-2 h-4 w-4" />
                 Call
               </Button>
-              <Button variant="outline" className="flex-1">
+              <Button variant="outline" className="flex-1" onClick={() => openNegotiateModal(buyer)}>
                 <Mail className="mr-2 h-4 w-4" />
                 Negotiate
               </Button>
@@ -103,6 +124,48 @@ export default function BuyersPage() {
           </Card>
         ))}
       </div>
+      
+      <Dialog open={isNegotiateModalOpen} onOpenChange={setIsNegotiateModalOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Negotiate with {selectedBuyer?.name}</DialogTitle>
+            <DialogDescription>
+              Send a message to start a price negotiation. This is a simulation.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="py-4 space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="message">Your Message</Label>
+              <Textarea id="message" placeholder="e.g., Hello, I have 10 tons of high-quality maize available. What is your current offer price?" rows={4} />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsNegotiateModalOpen(false)}>Cancel</Button>
+            <Button onClick={() => setIsNegotiateModalOpen(false)}>
+              <MessageSquare className="mr-2" />
+              Send Message
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+      
+      <Dialog open={isCallModalOpen} onOpenChange={setIsCallModalOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Call {selectedBuyer?.name}</DialogTitle>
+            <DialogDescription>
+              This is a simulation. In a real app, this would initiate a phone call.
+            </DialogDescription>
+          </DialogHeader>
+           <DialogFooter>
+            <Button variant="outline" onClick={() => setIsCallModalOpen(false)}>Cancel</Button>
+            <Button onClick={() => setIsCallModalOpen(false)}>
+              <Phone className="mr-2" />
+              Confirm Call
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

@@ -19,7 +19,7 @@ export default function FarmerManagementPage() {
   const [users, setUsers] = useState(appUsers.getUsers().filter(u => u.role !== 'admin'));
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [selectedUser, setSelectedUser] = useState(null);
+  const [selectedUser, setSelectedUser] = useState<any>(null);
 
   const openModal = (user:any = null) => {
     setSelectedUser(user);
@@ -131,7 +131,7 @@ export default function FarmerManagementPage() {
             <DialogHeader>
                 <DialogTitle>Are you sure you want to suspend this account?</DialogTitle>
                 <DialogDescription>
-                    This action will temporarily disable the user's access to the platform. They will not be able to log in. This action can be undone.
+                    This action will temporarily disable {selectedUser?.name}'s access to the platform. They will not be able to log in. This action can be undone.
                 </DialogDescription>
             </DialogHeader>
             <DialogFooter>
