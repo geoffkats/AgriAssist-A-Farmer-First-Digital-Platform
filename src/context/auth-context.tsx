@@ -14,7 +14,7 @@ type User = {
 type AuthContextType = {
   user: User | null;
   loading: boolean;
-  login: (email: string, password: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<User>;
   signup: (name: string, email: string, password: string) => Promise<void>;
   logout: () => void;
 };
@@ -45,6 +45,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       };
       setUser(userData);
       sessionStorage.setItem('agriassist-user', JSON.stringify(userData));
+      return userData;
     } else {
       throw new Error('Invalid email or password.');
     }

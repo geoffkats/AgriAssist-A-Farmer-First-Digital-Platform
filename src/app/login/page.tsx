@@ -38,12 +38,12 @@ export default function LoginPage() {
     const loginPassword = isAdmin ? 'adminpass' : password;
 
     try {
-      await login(loginEmail, loginPassword);
+      const user = await login(loginEmail, loginPassword);
       toast({
         title: 'Login Successful',
-        description: `Welcome back${isAdmin ? ', Admin' : ''}!`,
+        description: `Welcome back${user.role === 'admin' ? ', Admin' : ''}!`,
       });
-      if (isAdmin) {
+      if (user.role === 'admin') {
         router.push('/admin/dashboard');
       } else {
         router.push('/');
