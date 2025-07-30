@@ -1,4 +1,5 @@
 
+
 // This is a simulated in-memory user store.
 // In a real application, this would be a database.
 
@@ -69,6 +70,15 @@ class UserStore {
         };
         this.userList.push(newUser);
         return newUser;
+    }
+    
+    updateUser(email: string, updates: Partial<User>): User | null {
+        const userIndex = this.userList.findIndex(u => u.email === email);
+        if (userIndex > -1) {
+            this.userList[userIndex] = { ...this.userList[userIndex], ...updates };
+            return this.userList[userIndex];
+        }
+        return null;
     }
 
     findUserByEmail(email: string): User | undefined {

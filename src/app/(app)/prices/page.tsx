@@ -5,13 +5,14 @@ import { useState } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Bell, ArrowUp, ArrowDown, Star, CheckCircle, BellRing } from 'lucide-react';
+import { Bell, ArrowUp, ArrowDown, Star, Coins, BellRing } from 'lucide-react';
 import PricePredictor from '@/components/price-predictor';
 import { useProStatus } from '@/context/pro-status-context';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import Link from 'next/link';
 import { predictAction } from './actions';
-import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
+import { BuyCreditsDialog } from '@/components/buy-credits-dialog';
 
 const commodityPrices = [
   { name: 'Maize', price: 1250, unit: 'UGX/kg', change: 2.5, trend: 'up' },
@@ -26,6 +27,8 @@ export default function PricesPage() {
   const { isPro, aiCredits, consumeCredit } = useProStatus();
   const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
   const [selectedCommodity, setSelectedCommodity] = useState<any>(null);
+  const [isBuyCreditsOpen, setIsBuyCreditsOpen] = useState(false);
+
 
   const openAlertModal = (commodity: any) => {
     setSelectedCommodity(commodity);
@@ -33,6 +36,7 @@ export default function PricesPage() {
   };
 
   return (
+    <>
     <div className="flex flex-col gap-8">
       <header>
         <h1 className="text-3xl font-bold font-headline">Market Prices</h1>
@@ -93,14 +97,21 @@ export default function PricesPage() {
                     return result;
                   }} />
                 ) : (
-                  <div className="text-center flex flex-col items-center justify-center h-full">
-                    <p className="mb-4 text-muted-foreground">You have run out of AI credits. Upgrade for unlimited forecasts.</p>
-                    <Button asChild>
-                      <Link href="/pricing">
-                        <Star className="mr-2 h-4 w-4" />
-                        Upgrade to Pro
-                      </Link>
-                    </Button>
+                   <div className="text-center p-4 border-dashed border-2 rounded-lg h-full flex flex-col justify-center">
+                    <h3 className="text-lg font-semibold mb-2">You've run out of AI credits</h3>
+                    <p className="mb-4 text-muted-foreground">Choose an option to continue using AI forecasts.</p>
+                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                       <Button asChild>
+                          <Link href="/pricing">
+                          <Star className="mr-2 h-4 w-4" />
+                          Upgrade to Pro
+                          </Link>
+                      </Button>
+                       <Button variant="outline" onClick={() => setIsBuyCreditsOpen(true)}>
+                          <Coins className="mr-2 h-4 w-4" />
+                          Purchase Credits
+                      </Button>
+                    </div>
                   </div>
                 )}
               </CardContent>
@@ -127,7 +138,7 @@ export default function PricesPage() {
         </DialogContent>
       </Dialog>
     </div>
+    <BuyCreditsDialog open={isBuyCreditsOpen} onOpenChange={setIsBuyCreditsOpen} />
+    </>
   );
 }
-
-    

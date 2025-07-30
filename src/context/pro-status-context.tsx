@@ -9,6 +9,7 @@ type ProStatusContextType = {
   aiCredits: number;
   upgradeToPro: () => void;
   consumeCredit: () => void;
+  addCredits: (amount: number) => void;
 };
 
 const ProStatusContext = createContext<ProStatusContextType | undefined>(undefined);
@@ -43,10 +44,19 @@ export const ProStatusProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  const addCredits = (amount: number) => {
+     if (user && !user.isPro) {
+        const newCredits = aiCredits + amount;
+        setAiCredits(newCredits);
+        const updatedUser = { ...user, aiCredits: newCredits };
+        updateUser(updatedUser);
+    }
+  }
+
   const isProAccess = user?.role === 'admin' || isPro;
 
   return (
-    <ProStatusContext.Provider value={{ isPro: isProAccess, aiCredits, upgradeToPro, consumeCredit }}>
+    <ProStatusContext.Provider value={{ isPro: isProAccess, aiCredits, upgradeToPro, consumeCredit, addCredits }}>
       {children}
     </ProStatusContext.Provider>
   );

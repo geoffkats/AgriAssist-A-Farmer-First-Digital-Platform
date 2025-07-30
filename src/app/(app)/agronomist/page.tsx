@@ -1,19 +1,23 @@
 
 'use client';
 
+import { useState } from 'react';
 import PestIdentifier from '@/components/pest-identifier';
 import { useProStatus } from '@/context/pro-status-context';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Star } from 'lucide-react';
+import { Star, Coins } from 'lucide-react';
 import Link from 'next/link';
 import { identifyAction } from './actions';
+import { BuyCreditsDialog } from '@/components/buy-credits-dialog';
 
 
 export default function AgronomistPage() {
   const { isPro, aiCredits, consumeCredit } = useProStatus();
+  const [isBuyCreditsOpen, setIsBuyCreditsOpen] = useState(false);
 
   return (
+    <>
     <div className="flex flex-col gap-8">
       <header className="text-center">
         <h1 className="text-3xl font-bold font-headline">Ask Synth - Your AI Agronomist</h1>
@@ -40,14 +44,21 @@ export default function AgronomistPage() {
                    return result;
                  }} />
               ) : (
-                 <div className="text-center">
-                    <p className="mb-4 text-muted-foreground">You have run out of AI credits. Upgrade to Pro for unlimited AI diagnosis.</p>
-                    <Button asChild>
-                        <Link href="/pricing">
-                        <Star className="mr-2 h-4 w-4" />
-                        Upgrade to Pro
-                        </Link>
-                    </Button>
+                 <div className="text-center p-4 border-dashed border-2 rounded-lg">
+                    <h3 className="text-lg font-semibold mb-2">You've run out of AI credits</h3>
+                    <p className="mb-4 text-muted-foreground">Choose an option to continue using the AI Agronomist.</p>
+                    <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                      <Button asChild>
+                          <Link href="/pricing">
+                          <Star className="mr-2 h-4 w-4" />
+                          Upgrade to Pro (Unlimited)
+                          </Link>
+                      </Button>
+                       <Button variant="outline" onClick={() => setIsBuyCreditsOpen(true)}>
+                          <Coins className="mr-2 h-4 w-4" />
+                          Purchase Credits
+                      </Button>
+                    </div>
                  </div>
               )}
             </CardContent>
@@ -55,5 +66,7 @@ export default function AgronomistPage() {
         )}
       </div>
     </div>
+    <BuyCreditsDialog open={isBuyCreditsOpen} onOpenChange={setIsBuyCreditsOpen} />
+    </>
   );
 }

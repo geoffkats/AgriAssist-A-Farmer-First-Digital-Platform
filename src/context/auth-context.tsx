@@ -68,6 +68,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const updateUser = (updatedUser: User) => {
+    users.updateUser(updatedUser.email, updatedUser);
     setUser(updatedUser);
     sessionStorage.setItem('agriassist-user', JSON.stringify(updatedUser));
   }
