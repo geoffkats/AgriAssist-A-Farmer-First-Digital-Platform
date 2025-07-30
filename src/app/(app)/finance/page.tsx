@@ -4,7 +4,7 @@
 import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ArrowUpRight, ArrowDownLeft, Landmark, Plus, Receipt, Star, Wallet, CheckCircle, CreditCard, Smartphone, Globe, Camera } from 'lucide-react';
+import { ArrowUpRight, ArrowDownLeft, Landmark, Plus, Receipt, Star, Wallet, CheckCircle, CreditCard, Smartphone, Globe, Camera, Download, FileText } from 'lucide-react';
 import { useProStatus } from '@/context/pro-status-context';
 import Link from 'next/link';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
@@ -162,10 +162,14 @@ export default function FinancePage() {
             ))}
           </div>
         </CardContent>
-        <CardFooter className="justify-center">
+        <CardFooter className="justify-end gap-2">
             <Button variant="outline">
-                <Receipt className="mr-2 h-4 w-4" />
-                View Full Statement
+                <Receipt className="mr-2" />
+                View Statement
+            </Button>
+            <Button>
+                <Download className="mr-2" />
+                Download PDF
             </Button>
         </CardFooter>
       </Card>
@@ -284,3 +288,4 @@ export default function FinancePage() {
     </div>
   );
 }
+
