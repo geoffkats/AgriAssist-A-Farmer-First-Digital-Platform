@@ -17,6 +17,7 @@ import {
 } from '@/components/ui/sidebar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
+import { useProStatus } from '@/context/pro-status-context';
 
 const navItems = [
   { href: '/', label: 'Home', icon: Home },
@@ -31,6 +32,7 @@ const navItems = [
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const { isPro } = useProStatus();
 
   return (
     <SidebarProvider>
@@ -60,6 +62,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           </SidebarMenu>
         </SidebarContent>
         <SidebarFooter>
+          {!isPro && (
             <Card className="m-2 bg-gradient-to-br from-primary/20 to-primary/5 border-primary/20 overflow-hidden group-data-[collapsible=icon]:p-0 group-data-[collapsible=icon]:bg-transparent group-data-[collapsible=icon]:border-none">
               <CardHeader className="p-3 group-data-[collapsible=icon]:p-0">
                  <CardTitle className="text-sm flex items-center gap-2 group-data-[collapsible=icon]:hidden">
@@ -83,6 +86,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                    </div>
               </CardContent>
             </Card>
+          )}
         </SidebarFooter>
       </Sidebar>
       <SidebarInset>

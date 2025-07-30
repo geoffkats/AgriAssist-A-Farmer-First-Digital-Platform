@@ -2,6 +2,7 @@ import { Check, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import Link from 'next/link';
 
 const freeFeatures = [
   'Daily market price listings',
@@ -83,8 +84,8 @@ export default function PricingPage() {
             </ul>
           </CardContent>
           <CardFooter>
-            <Button className="w-full">
-              Upgrade to Pro
+            <Button asChild className="w-full">
+              <Link href="/payment">Upgrade to Pro</Link>
             </Button>
           </CardFooter>
         </Card>

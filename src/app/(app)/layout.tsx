@@ -1,9 +1,14 @@
 import AppLayout from '@/components/layout/app-layout';
+import { ProStatusProvider } from '@/context/pro-status-context';
 
 export default function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  return <AppLayout>{children}</AppLayout>;
+  return (
+    <ProStatusProvider>
+      <AppLayout>{children}</AppLayout>
+    </ProStatusProvider>
+  );
 }
