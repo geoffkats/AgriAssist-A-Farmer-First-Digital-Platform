@@ -70,8 +70,8 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       <Sidebar>
         <SidebarHeader className="p-4">
           <Link href="/" className="flex items-center gap-2">
-            <Wheat className="h-8 w-8 text-white" />
-            <h1 className="text-xl font-bold font-headline group-data-[collapsible=icon]:hidden text-white">SynthFarm</h1>
+            <Wheat className="h-8 w-8 text-primary" />
+            <h1 className="text-xl font-bold font-headline group-data-[collapsible=icon]:hidden text-sidebar-primary">AgriAssist</h1>
           </Link>
         </SidebarHeader>
         <SidebarContent>
@@ -126,22 +126,22 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         </SidebarContent>
         <SidebarFooter>
           {!isPro && user?.role !== 'admin' && (
-            <Card className="m-2 bg-gradient-to-br from-blue-500 to-blue-700 border-none overflow-hidden group-data-[collapsible=icon]:p-0 group-data-[collapsible=icon]:bg-transparent group-data-[collapsible=icon]:border-none text-white">
+            <Card className="m-2 bg-gradient-to-br from-primary to-accent border-none overflow-hidden group-data-[collapsible=icon]:p-0 group-data-[collapsible=icon]:bg-transparent group-data-[collapsible=icon]:border-none text-white">
               <CardHeader className="p-3 group-data-[collapsible=icon]:p-0">
-                 <CardTitle className="text-sm flex items-center gap-2 group-data-[collapsible=icon]:hidden">
+                 <CardTitle className="text-sm flex items-center gap-2 group-data-[collapsible=icon]:hidden text-primary-foreground">
                     <Star/>
                     Unlock Pro Features
                  </CardTitle>
               </CardHeader>
               <CardContent className="p-3 pt-0 group-data-[collapsible=icon]:p-0">
                   <div className="group-data-[collapsible=icon]:hidden">
-                    <p className="text-xs text-white/80 mb-3">Get AI price predictions, loan access, and more.</p>
-                    <Button asChild size="sm" className="w-full bg-white text-blue-600 hover:bg-white/90">
+                    <p className="text-xs text-primary-foreground/80 mb-3">Get AI price predictions, loan access, and more.</p>
+                    <Button asChild size="sm" className="w-full bg-background text-foreground hover:bg-background/90">
                         <Link href="/pricing">Go Pro</Link>
                     </Button>
                   </div>
                    <div className="hidden group-data-[collapsible=icon]:block">
-                     <Button asChild size="icon" className="h-8 w-8 bg-white text-blue-600 hover:bg-white/90">
+                     <Button asChild size="icon" className="h-8 w-8 bg-white text-primary hover:bg-white/90">
                         <Link href="/pricing">
                             <Star />
                         </Link>
@@ -158,7 +158,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
              <SidebarTrigger />
              <div className="flex items-center gap-2 mx-auto">
                 <Wheat className="h-6 w-6 text-primary" />
-                <h1 className="text-lg font-bold font-headline">SynthFarm</h1>
+                <h1 className="text-lg font-bold font-headline">AgriAssist</h1>
               </div>
           </header>
           <div className="py-8">

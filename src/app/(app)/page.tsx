@@ -45,9 +45,9 @@ const marketplaceItems = [
 ];
 
 const agronomyGuides = [
-    { title: 'Identifying Fall Armyworm', type: 'Video', icon: Video, color: 'text-red-500' },
-    { title: 'Proper Fertilizer Application for Beans', type: 'Guide', icon: Leaf, color: 'text-green-500' },
-    { title: 'Post-Harvest Handling for Coffee', type: 'Video', icon: Video, color: 'text-red-500' },
+    { title: 'Identifying Fall Armyworm', type: 'Video', icon: Video },
+    { title: 'Proper Fertilizer Application for Beans', type: 'Guide', icon: Leaf },
+    { title: 'Post-Harvest Handling for Coffee', type: 'Video', icon: Video },
 ]
 
 export default function DashboardPage() {
@@ -68,7 +68,7 @@ export default function DashboardPage() {
                 <div className="p-3 rounded-full bg-primary/10">
                     <feature.icon className="w-6 h-6 text-primary" />
                 </div>
-                <CardTitle>{feature.title}</CardTitle>
+                <CardTitle className="font-headline">{feature.title}</CardTitle>
               </div>
               <CardDescription className="pt-2">{feature.description}</CardDescription>
             </CardHeader>
