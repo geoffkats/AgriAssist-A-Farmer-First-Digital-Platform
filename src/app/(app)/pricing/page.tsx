@@ -1,3 +1,4 @@
+
 import { Check, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -13,12 +14,13 @@ const freeFeatures = [
 ];
 
 const proFeatures = [
-  'AI-powered price trend analysis & alerts',
-  'Automated bulk ordering & group buys',
-  'Access to micro-loans and crop insurance',
-  'AI Agronomist Chatbot (pest identification)',
-  'Traceability & quality certification',
-  'Advanced co-operative management tools',
+  'Advanced Analytics & Reporting',
+  'Precision-Ag Integrations',
+  'Automated Supply-Chain Tools',
+  'Premium Finance & Insurance',
+  'Market-Access Premiums',
+  'Concierge & Support Services',
+  'White-Label & API Access',
 ];
 
 export default function PricingPage() {
