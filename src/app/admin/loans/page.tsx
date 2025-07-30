@@ -1,10 +1,11 @@
 
 'use client';
 
+import { useState } from 'react';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Search, CheckCircle, XCircle, MoreHorizontal, FileText, Download, SlidersHorizontal } from 'lucide-react';
+import { Search, CheckCircle, XCircle, MoreHorizontal, FileText, Download, SlidersHorizontal, X } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
@@ -12,6 +13,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 
 const applications = [
     { id: 'LOAN-0721', farmer: 'John Mubiru', amount: 'UGX 1,500,000', purpose: 'Maize Seeds & Fertilizer', risk: 'Low', status: 'Pending', date: '2024-07-21' },
@@ -23,9 +25,23 @@ const applications = [
 const repayments = [
     { id: 'REPAY-0615', loanId: 'LOAN-0601', farmer: 'Aisha Nakato', amount: 'UGX 200,000', date: '2024-07-15', status: 'Paid' },
     { id: 'REPAY-0614', loanId: 'LOAN-0525', farmer: 'David Lumu', amount: 'UGX 400,000', date: '2024-07-14', status: 'Overdue' },
-]
+];
 
 export default function LoanManagementPage() {
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedApplication, setSelectedApplication] = useState(null);
+    const [decision, setDecision] = useState<'approve' | 'reject' | null>(null);
+
+    const openModal = (app:any, action: 'approve' | 'reject' | 'view') => {
+        setSelectedApplication(app);
+        if (action === 'approve' || action === 'reject') {
+            setDecision(action);
+        } else {
+            setDecision(null);
+        }
+        setIsModalOpen(true);
+    };
+
     return (
         <div className="flex flex-col gap-8">
             <header>
@@ -84,9 +100,9 @@ export default function LoanManagementPage() {
                                                         <Button variant="ghost" size="icon"><MoreHorizontal/></Button>
                                                     </DropdownMenuTrigger>
                                                     <DropdownMenuContent align="end">
-                                                        <DropdownMenuItem>View Details</DropdownMenuItem>
-                                                        <DropdownMenuItem className="text-green-600 flex items-center gap-2"><CheckCircle size={16}/> Approve</DropdownMenuItem>
-                                                        <DropdownMenuItem className="text-destructive flex items-center gap-2"><XCircle size={16}/> Reject</DropdownMenuItem>
+                                                        <DropdownMenuItem onClick={() => openModal(app, 'view')}>View Details</DropdownMenuItem>
+                                                        <DropdownMenuItem className="text-green-600 flex items-center gap-2" onClick={() => openModal(app, 'approve')}><CheckCircle size={16}/> Approve</DropdownMenuItem>
+                                                        <DropdownMenuItem className="text-destructive flex items-center gap-2" onClick={() => openModal(app, 'reject')}><XCircle size={16}/> Reject</DropdownMenuItem>
                                                     </DropdownMenuContent>
                                                 </DropdownMenu>
                                             </TableCell>
@@ -219,6 +235,41 @@ export default function LoanManagementPage() {
                     </Card>
                 </TabsContent>
             </Tabs>
+            
+            <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>
+                             {decision === 'approve' && `Approve Loan Application?`}
+                             {decision === 'reject' && `Reject Loan Application?`}
+                             {!decision && `Loan Application Details`}
+                        </DialogTitle>
+                        <DialogDescription>
+                            {decision === 'approve' && `This will mark loan ${selectedApplication?.id} as approved and notify the applicant.`}
+                            {decision === 'reject' && `This will mark loan ${selectedApplication?.id} as rejected and notify the applicant.`}
+                            {!decision && `Reviewing details for loan ${selectedApplication?.id} for ${selectedApplication?.farmer}.`}
+                        </DialogDescription>
+                    </DialogHeader>
+                    {decision ? (
+                         <DialogFooter>
+                            <Button variant="outline" onClick={() => setIsModalOpen(false)}>Cancel</Button>
+                            <Button 
+                                variant={decision === 'approve' ? 'default' : 'destructive'} 
+                                onClick={() => setIsModalOpen(false)}
+                            >
+                                {decision === 'approve' ? 'Yes, Approve' : 'Yes, Reject'}
+                            </Button>
+                        </DialogFooter>
+                    ) : (
+                         <div className="py-4 space-y-4">
+                            <p><strong>Farmer:</strong> {selectedApplication?.farmer}</p>
+                            <p><strong>Amount:</strong> {selectedApplication?.amount}</p>
+                            <p><strong>Purpose:</strong> {selectedApplication?.purpose}</p>
+                            <p><strong>AI Risk Assessment:</strong> <Badge variant={selectedApplication?.risk === 'Low' ? 'default' : selectedApplication?.risk === 'Medium' ? 'secondary' : 'destructive'}>{selectedApplication?.risk}</Badge></p>
+                        </div>
+                    )}
+                </DialogContent>
+            </Dialog>
         </div>
     );
 }

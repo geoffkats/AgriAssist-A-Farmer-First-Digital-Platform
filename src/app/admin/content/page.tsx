@@ -1,13 +1,17 @@
 
 'use client';
 
+import { useState } from 'react';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Search, Plus, MoreHorizontal, Video, FileText, Bot } from 'lucide-react';
+import { Search, Plus, MoreHorizontal, Video, FileText, Bot, X } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import Image from 'next/image';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 const contentItems = [
     { id: 'VID001', title: 'Proper Fertilizer Application for Maize', type: 'Video', category: 'Crop Management', views: 12800, lang: 'Luganda, English' },
@@ -17,6 +21,14 @@ const contentItems = [
 ];
 
 export default function ContentManagementPage() {
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedContent, setSelectedContent] = useState(null);
+
+    const openModal = (content:any = null) => {
+        setSelectedContent(content);
+        setIsModalOpen(true);
+    };
+
     return (
         <div className="flex flex-col gap-8">
             <header>
@@ -37,7 +49,7 @@ export default function ContentManagementPage() {
                           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                           <Input placeholder="Search content..." className="pl-10" />
                         </div>
-                        <Button><Plus className="mr-2"/> Add New Content</Button>
+                        <Button onClick={() => openModal()}><Plus className="mr-2"/> Add New Content</Button>
                     </div>
                 </div>
 
@@ -73,7 +85,7 @@ export default function ContentManagementPage() {
                                             <TableCell>{item.category}</TableCell>
                                             <TableCell>{item.views.toLocaleString()}</TableCell>
                                             <TableCell className="text-right">
-                                                 <Button variant="outline" size="sm">Edit</Button>
+                                                 <Button variant="outline" size="sm" onClick={() => openModal(item)}>Edit</Button>
                                             </TableCell>
                                         </TableRow>
                                     ))}
@@ -93,6 +105,49 @@ export default function ContentManagementPage() {
                     </Card>
                 </TabsContent>
             </Tabs>
+
+            <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+                <DialogContent className="sm:max-w-[500px]">
+                    <DialogHeader>
+                        <DialogTitle>{selectedContent ? 'Edit Content' : 'Add New Content'}</DialogTitle>
+                        <DialogDescription>
+                            {selectedContent ? `Editing "${selectedContent.title}"` : 'Upload and configure a new piece of content.'}
+                        </DialogDescription>
+                    </DialogHeader>
+                    <div className="grid gap-4 py-4">
+                        <div className="space-y-2">
+                            <Label htmlFor="title">Title</Label>
+                            <Input id="title" defaultValue={selectedContent?.title || ''} />
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="category">Category</Label>
+                            <Input id="category" defaultValue={selectedContent?.category || ''} />
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="type">Content Type</Label>
+                             <Select defaultValue={selectedContent?.type}>
+                                <SelectTrigger>
+                                    <SelectValue placeholder="Select content type" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="Video">Video</SelectItem>
+                                    <SelectItem value="PDF Guide">PDF Guide</SelectItem>
+                                    <SelectItem value="Audio">Audio</SelectItem>
+                                    <SelectItem value="Chatbot Knowledge">Chatbot Knowledge</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="content-body">Content Body / URL / Text</Label>
+                            <Textarea id="content-body" placeholder="For videos, enter a URL. For text, type here." rows={5} />
+                        </div>
+                    </div>
+                    <DialogFooter>
+                        {selectedContent && <Button variant="destructive" onClick={() => setIsModalOpen(false)}>Delete</Button>}
+                        <Button type="submit" onClick={() => setIsModalOpen(false)}>Save Content</Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
         </div>
     );
 }

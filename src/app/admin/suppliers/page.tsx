@@ -1,15 +1,20 @@
 
 'use client';
 
+import { useState } from 'react';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Search, Plus, MoreHorizontal, Upload, CheckCircle, XCircle } from 'lucide-react';
+import { Search, Plus, MoreHorizontal, Upload, CheckCircle, XCircle, X } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import Image from 'next/image';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Switch } from '@/components/ui/switch';
 
 
 const suppliers = [
@@ -27,6 +32,22 @@ const products = [
 ];
 
 export default function SupplierManagementPage() {
+    const [isSupplierModalOpen, setIsSupplierModalOpen] = useState(false);
+    const [selectedSupplier, setSelectedSupplier] = useState(null);
+    const [isProductModalOpen, setIsProductModalOpen] = useState(false);
+    const [selectedProduct, setSelectedProduct] = useState(null);
+    const [activeTab, setActiveTab] = useState('suppliers');
+
+    const openSupplierModal = (supplier:any = null) => {
+        setSelectedSupplier(supplier);
+        setIsSupplierModalOpen(true);
+    };
+
+    const openProductModal = (product:any = null) => {
+        setSelectedProduct(product);
+        setIsProductModalOpen(true);
+    };
+
     return (
         <div className="flex flex-col gap-8">
             <header>
@@ -34,7 +55,7 @@ export default function SupplierManagementPage() {
                 <p className="text-muted-foreground">Manage vendors and the items they list in the Input Marketplace.</p>
             </header>
 
-            <Tabs defaultValue="suppliers">
+            <Tabs defaultValue="suppliers" onValueChange={setActiveTab}>
                 <div className="flex items-center justify-between">
                     <TabsList>
                         <TabsTrigger value="suppliers">Suppliers</TabsTrigger>
@@ -45,7 +66,7 @@ export default function SupplierManagementPage() {
                           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                           <Input placeholder="Search..." className="pl-10" />
                         </div>
-                        <Button><Plus className="mr-2"/> Add New</Button>
+                        <Button onClick={() => activeTab === 'suppliers' ? openSupplierModal() : openProductModal()}><Plus className="mr-2"/> Add New</Button>
                     </div>
                 </div>
 
@@ -83,7 +104,7 @@ export default function SupplierManagementPage() {
                                                         <Button variant="ghost" size="icon"><MoreHorizontal /></Button>
                                                     </DropdownMenuTrigger>
                                                     <DropdownMenuContent align="end">
-                                                        <DropdownMenuItem>View Profile</DropdownMenuItem>
+                                                        <DropdownMenuItem onClick={() => openSupplierModal(s)}>View Profile</DropdownMenuItem>
                                                         <DropdownMenuItem>View Products</DropdownMenuItem>
                                                         <DropdownMenuItem className="text-green-600">Approve</DropdownMenuItem>
                                                         <DropdownMenuItem className="text-destructive">Suspend</DropdownMenuItem>
@@ -135,7 +156,7 @@ export default function SupplierManagementPage() {
                                                         <Button variant="ghost" size="icon"><MoreHorizontal /></Button>
                                                     </DropdownMenuTrigger>
                                                     <DropdownMenuContent align="end">
-                                                        <DropdownMenuItem>Edit Product</DropdownMenuItem>
+                                                        <DropdownMenuItem onClick={() => openProductModal(p)}>Edit Product</DropdownMenuItem>
                                                         <DropdownMenuItem>Deactivate</DropdownMenuItem>
                                                     </DropdownMenuContent>
                                                 </DropdownMenu>
@@ -148,6 +169,75 @@ export default function SupplierManagementPage() {
                     </Card>
                 </TabsContent>
             </Tabs>
+
+            <Dialog open={isSupplierModalOpen} onOpenChange={setIsSupplierModalOpen}>
+                <DialogContent className="sm:max-w-[425px]">
+                    <DialogHeader>
+                        <DialogTitle>{selectedSupplier ? 'Edit Supplier' : 'Add New Supplier'}</DialogTitle>
+                        <DialogDescription>
+                            {selectedSupplier ? `Editing details for ${selectedSupplier.name}` : 'Enter the new supplier\'s information.'}
+                        </DialogDescription>
+                    </DialogHeader>
+                    <div className="grid gap-4 py-4">
+                        <div className="space-y-2">
+                            <Label htmlFor="s-name">Supplier Name</Label>
+                            <Input id="s-name" defaultValue={selectedSupplier?.name || ''} />
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="s-location">Location</Label>
+                            <Input id="s-location" defaultValue={selectedSupplier?.location || ''} />
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="s-contact">Contact Email</Label>
+                            <Input id="s-contact" type="email" defaultValue={selectedSupplier?.contact || ''} />
+                        </div>
+                    </div>
+                    <DialogFooter>
+                        <Button variant="destructive" onClick={() => setIsSupplierModalOpen(false)}>Delete</Button>
+                        <Button type="submit" onClick={() => setIsSupplierModalOpen(false)}>Save Supplier</Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+
+            <Dialog open={isProductModalOpen} onOpenChange={setIsProductModalOpen}>
+                <DialogContent className="sm:max-w-[425px]">
+                    <DialogHeader>
+                        <DialogTitle>{selectedProduct ? 'Edit Product' : 'Add New Product'}</DialogTitle>
+                        <DialogDescription>
+                             {selectedProduct ? `Editing details for ${selectedProduct.name}` : 'Enter the new product\'s information.'}
+                        </DialogDescription>
+                    </DialogHeader>
+                    <div className="grid gap-4 py-4">
+                        <div className="space-y-2">
+                            <Label htmlFor="p-name">Product Name</Label>
+                            <Input id="p-name" defaultValue={selectedProduct?.name || ''} />
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="p-supplier">Supplier</Label>
+                             <Select defaultValue={selectedProduct?.supplier}>
+                                <SelectTrigger>
+                                    <SelectValue placeholder="Select supplier" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {suppliers.map(s => <SelectItem key={s.id} value={s.name}>{s.name}</SelectItem>)}
+                                </SelectContent>
+                            </Select>
+                        </div>
+                         <div className="space-y-2">
+                            <Label htmlFor="p-price">Price (UGX)</Label>
+                            <Input id="p-price" type="number" defaultValue={selectedProduct?.price || ''} />
+                        </div>
+                        <div className="flex items-center space-x-2">
+                            <Switch id="p-status" checked={selectedProduct ? selectedProduct.status === 'Active' : true} />
+                            <Label htmlFor="p-status">Product is Active</Label>
+                        </div>
+                    </div>
+                    <DialogFooter>
+                         <Button variant="destructive" onClick={() => setIsProductModalOpen(false)}>Delete</Button>
+                        <Button type="submit" onClick={() => setIsProductModalOpen(false)}>Save Product</Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
         </div>
     );
 }

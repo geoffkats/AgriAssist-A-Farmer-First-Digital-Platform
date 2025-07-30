@@ -1,15 +1,20 @@
 
 'use client';
 
+import { useState } from 'react';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Search, Plus, MoreHorizontal, CheckCircle, ShieldCheck, Download, Users, Target, Tractor } from 'lucide-react';
+import { Search, Plus, MoreHorizontal, CheckCircle, ShieldCheck, Download, Users, Target, Tractor, X } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Progress } from '@/components/ui/progress';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+
 
 const buyers = [
     { id: 'BUY001', name: 'Kampala Agro Processors', contact: 'procurement@kpl-agro.com', type: 'Processor', status: 'Verified', trades: 124, crops: 'Maize, Beans' },
@@ -45,6 +50,15 @@ const cooperatives = [
 
 
 export default function BuyerManagementPage() {
+    const [isBuyerModalOpen, setIsBuyerModalOpen] = useState(false);
+    const [isCoopModalOpen, setIsCoopModalOpen] = useState(false);
+    const [selectedBuyer, setSelectedBuyer] = useState(null);
+
+    const openBuyerModal = (buyer:any = null) => {
+        setSelectedBuyer(buyer);
+        setIsBuyerModalOpen(true);
+    };
+    
     return (
         <div className="flex flex-col gap-8">
             <header>
@@ -63,7 +77,7 @@ export default function BuyerManagementPage() {
                           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                           <Input placeholder="Search..." className="pl-10" />
                         </div>
-                        <Button><Plus className="mr-2"/> Add New</Button>
+                        <Button onClick={() => openBuyerModal()}><Plus className="mr-2"/> Add New</Button>
                     </div>
                 </div>
 
@@ -99,7 +113,7 @@ export default function BuyerManagementPage() {
                                                         <Button variant="ghost" size="icon"><MoreHorizontal/></Button>
                                                     </DropdownMenuTrigger>
                                                     <DropdownMenuContent align="end">
-                                                        <DropdownMenuItem>View Profile</DropdownMenuItem>
+                                                        <DropdownMenuItem onClick={() => openBuyerModal(b)}>View Profile</DropdownMenuItem>
                                                         <DropdownMenuItem className="flex items-center gap-2"><Download size={16}/> View Documents</DropdownMenuItem>
                                                         <DropdownMenuItem className="text-green-600 flex items-center gap-2"><CheckCircle size={16}/> Verify Buyer</DropdownMenuItem>
                                                     </DropdownMenuContent>
@@ -158,6 +172,39 @@ export default function BuyerManagementPage() {
                      ))}
                 </TabsContent>
             </Tabs>
+            
+            <Dialog open={isBuyerModalOpen} onOpenChange={setIsBuyerModalOpen}>
+                <DialogContent className="sm:max-w-[425px]">
+                    <DialogHeader>
+                        <DialogTitle>{selectedBuyer ? 'Edit Buyer Profile' : 'Add New Buyer'}</DialogTitle>
+                        <DialogDescription>
+                            {selectedBuyer ? `Editing profile for ${selectedBuyer.name}` : 'Enter the details for the new buyer.'}
+                        </DialogDescription>
+                    </DialogHeader>
+                    <div className="grid gap-4 py-4">
+                        <div className="grid grid-cols-4 items-center gap-4">
+                            <Label htmlFor="name" className="text-right">Name</Label>
+                            <Input id="name" defaultValue={selectedBuyer?.name || ''} className="col-span-3" />
+                        </div>
+                        <div className="grid grid-cols-4 items-center gap-4">
+                            <Label htmlFor="contact" className="text-right">Contact</Label>
+                            <Input id="contact" defaultValue={selectedBuyer?.contact || ''} className="col-span-3" />
+                        </div>
+                         <div className="grid grid-cols-4 items-center gap-4">
+                            <Label htmlFor="type" className="text-right">Type</Label>
+                            <Input id="type" defaultValue={selectedBuyer?.type || ''} className="col-span-3" />
+                        </div>
+                         <div className="grid grid-cols-4 items-center gap-4">
+                            <Label htmlFor="crops" className="text-right">Crops</Label>
+                            <Input id="crops" defaultValue={selectedBuyer?.crops || ''} className="col-span-3" />
+                        </div>
+                    </div>
+                    <DialogFooter>
+                        {selectedBuyer && <Button variant="destructive" onClick={() => setIsBuyerModalOpen(false)}>Delete</Button>}
+                        <Button type="submit" onClick={() => setIsBuyerModalOpen(false)}>Save changes</Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
         </div>
     );
 }

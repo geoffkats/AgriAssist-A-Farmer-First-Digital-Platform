@@ -1,14 +1,17 @@
 
 'use client';
 
+import { useState } from 'react';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { User, Shield, Trash2, Plus } from 'lucide-react';
+import { User, Shield, Trash2, Plus, X } from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 
 const adminUsers = [
@@ -18,6 +21,8 @@ const adminUsers = [
 ];
 
 export default function SettingsPage() {
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
     return (
         <div className="flex flex-col gap-8">
             <header>
@@ -79,7 +84,7 @@ export default function SettingsPage() {
                                 <CardTitle>Admin Users</CardTitle>
                                 <CardDescription>Manage who has access to this admin dashboard.</CardDescription>
                             </div>
-                            <Button><Plus className="mr-2"/> Invite Admin</Button>
+                            <Button onClick={() => setIsModalOpen(true)}><Plus className="mr-2"/> Invite Admin</Button>
                         </CardHeader>
                         <CardContent>
                            <Table>
@@ -120,6 +125,41 @@ export default function SettingsPage() {
                     </Card>
                 </TabsContent>
             </Tabs>
+
+            <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+                <DialogContent className="sm:max-w-[425px]">
+                    <DialogHeader>
+                        <DialogTitle>Invite New Admin</DialogTitle>
+                        <DialogDescription>
+                            Enter the email and assign a role for the new admin user.
+                        </DialogDescription>
+                    </DialogHeader>
+                    <div className="grid gap-4 py-4">
+                        <div className="space-y-2">
+                            <Label htmlFor="email">Email Address</Label>
+                            <Input id="email" type="email" placeholder="new.admin@agriassist.app" />
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="role">Admin Role</Label>
+                            <Select>
+                                <SelectTrigger id="role">
+                                    <SelectValue placeholder="Select a role" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="super-admin">Super Admin</SelectItem>
+                                    <SelectItem value="content-admin">Content Admin</SelectItem>
+                                    <SelectItem value="loan-officer">Loan Officer</SelectItem>
+                                    <SelectItem value="support-agent">Support Agent</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
+                    </div>
+                    <DialogFooter>
+                        <Button variant="outline" onClick={() => setIsModalOpen(false)}>Cancel</Button>
+                        <Button type="submit" onClick={() => setIsModalOpen(false)}>Send Invitation</Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
         </div>
     );
 }
