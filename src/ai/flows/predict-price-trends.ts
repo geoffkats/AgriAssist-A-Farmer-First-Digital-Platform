@@ -6,7 +6,7 @@
  *
  * - predictPriceTrends - A function that predicts the price trends for a commodity.
  * - PredictPriceTrendsInput - The input type for the predictPriceTrends function.
- * - PredictPriceTrendsOutput - The output type for the predictPriceTrends function.
+ * - PredictPriceTrendsOutput - The output type for the predictPricetrends function.
  */
 
 import {ai} from '@/ai/genkit';
@@ -62,9 +62,6 @@ const prompt = ai.definePrompt({
 
   Recommendation:
   - Provide a clear recommendation of whether to sell or hold the commodity based on the predicted price trends.
-
-  Output in JSON format:
-  {{output type="PredictPriceTrendsOutputSchema"}}
   `,
 });
 
