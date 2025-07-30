@@ -1,9 +1,9 @@
 
-import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
+import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Search, Video, FileText, Mic } from 'lucide-react';
+import { Search, Video, FileText, Mic, PlayCircle } from 'lucide-react';
 import Image from 'next/image';
 import { Badge } from '@/components/ui/badge';
 
@@ -51,16 +51,22 @@ export default function GuidesPage() {
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {guides.map((guide) => (
-          <Card key={guide.title} className="flex flex-col overflow-hidden">
-            <CardHeader className="p-0 relative">
-              <Image src={guide.image} alt={guide.title} width={400} height={225} className="object-cover w-full h-40" data-ai-hint={guide.hint} />
-              <Badge className="absolute top-2 right-2">
+          <Card key={guide.title} className="flex flex-col overflow-hidden group">
+            <div className="relative">
+              <Image src={guide.image} alt={guide.title} width={400} height={225} className="object-cover w-full h-48 transition-transform duration-300 group-hover:scale-105" data-ai-hint={guide.hint} />
+              <div className="absolute inset-0 bg-black/30 group-hover:bg-black/50 transition-colors" />
+               <Badge className="absolute top-3 right-3 bg-black/50 text-white border-white/20">
                 <GuideIcon type={guide.type} /> <span className="ml-1.5">{guide.type}</span>
               </Badge>
-            </CardHeader>
-            <CardContent className="pt-4 flex-grow">
+              {guide.type === 'Video' && (
+                <div className="absolute inset-0 flex items-center justify-center">
+                    <PlayCircle className="w-16 h-16 text-white/70 group-hover:text-white transition-colors" />
+                </div>
+              )}
+            </div>
+            <CardContent className="pt-4 flex-grow flex flex-col">
               <p className="text-xs text-primary font-semibold uppercase">{guide.category}</p>
-              <h3 className="font-semibold text-lg mt-1">{guide.title}</h3>
+              <h3 className="font-semibold font-headline text-xl mt-1 flex-grow">{guide.title}</h3>
             </CardContent>
             <CardFooter>
               <Button variant="secondary" className="w-full">
