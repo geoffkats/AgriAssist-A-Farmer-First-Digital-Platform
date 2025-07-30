@@ -100,17 +100,18 @@ export default function FinancePage() {
             </CardContent>
         </Card>
         {isPro ? (
-            <Card className="flex flex-col">
+            <Card className="relative flex flex-col justify-center items-center text-center p-6 overflow-hidden bg-gray-900 text-white">
+                <Landmark className="absolute -right-4 -bottom-4 h-32 w-32 text-white/10" />
                 <CardHeader>
-                    <CardTitle className="font-headline">Agri-Credit</CardTitle>
-                    <CardDescription>Get a loan for your farm inputs.</CardDescription>
+                    <CardTitle className="font-headline text-primary">Agri-Credit</CardTitle>
+                    <CardDescription className="text-white/80">Get a loan for your farm inputs.</CardDescription>
                 </CardHeader>
-                <CardContent className="flex-grow">
-                    <p className="text-sm text-muted-foreground">Available Limit</p>
-                    <p className="text-2xl font-bold">UGX 2,000,000</p>
+                <CardContent className="flex-grow flex flex-col items-center justify-center">
+                    <p className="text-sm text-white/60">Available Limit</p>
+                    <p className="text-4xl font-bold text-white">UGX 2,000,000</p>
                 </CardContent>
-                <CardFooter>
-                    <Button className="w-full" onClick={() => setIsLoanModalOpen(true)}>
+                <CardFooter className="w-full">
+                    <Button variant="secondary" className="w-full" onClick={() => setIsLoanModalOpen(true)}>
                         <Landmark className="mr-2 h-4 w-4" />
                         Apply for Loan
                     </Button>
