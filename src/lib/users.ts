@@ -36,6 +36,16 @@ class UserStore {
             aiCredits: 15,
         });
 
+        // Add a default regular user who ran out of credits
+        this.userList.push({
+            name: 'Credit Buyer',
+            email: 'buyer@agriassist.app',
+            passwordHash: this.hashPassword('buyerpass'),
+            role: 'user',
+            isPro: false,
+            aiCredits: 50,
+        });
+
         // Add a default Google user
         this.userList.push({
             name: 'Google User',
@@ -43,7 +53,7 @@ class UserStore {
             passwordHash: this.hashPassword('googlepass'),
             role: 'user',
             isPro: false,
-            aiCredits: 15,
+            aiCredits: 0,
         });
     }
 

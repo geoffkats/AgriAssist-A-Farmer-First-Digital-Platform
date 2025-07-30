@@ -8,7 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { users as appUsers } from '@/lib/users';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { MoreHorizontal, Search, Plus, X } from 'lucide-react';
+import { MoreHorizontal, Search, Plus, X, Wand2 } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
@@ -54,8 +54,8 @@ export default function FarmerManagementPage() {
               <TableRow>
                 <TableHead>Name</TableHead>
                 <TableHead>Email</TableHead>
-                <TableHead>Subscription Plan</TableHead>
-                <TableHead>KYC Status</TableHead>
+                <TableHead>Plan</TableHead>
+                <TableHead>AI Credits</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
@@ -70,7 +70,10 @@ export default function FarmerManagementPage() {
                     </Badge>
                   </TableCell>
                   <TableCell>
-                     <Badge variant="outline">Pending</Badge>
+                    <div className="flex items-center gap-2">
+                       <Wand2 className="h-4 w-4 text-primary" />
+                       {user.isPro ? 'Unlimited' : user.aiCredits}
+                    </div>
                   </TableCell>
                    <TableCell className="text-right">
                     <DropdownMenu>

@@ -3,7 +3,7 @@
 
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Download, TrendingUp, Users, ShoppingCart } from 'lucide-react';
+import { Download, TrendingUp, Users, ShoppingCart, Coins } from 'lucide-react';
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip } from 'recharts';
 
 const revenueData = [
@@ -24,7 +24,7 @@ export default function FinancialsPage() {
                 <p className="text-muted-foreground">Track AgriAssist’s revenue and Pro user base.</p>
             </header>
 
-            <div className="grid gap-6 md:grid-cols-3">
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
                 <Card>
                     <CardHeader className="flex flex-row items-center justify-between pb-2">
                         <CardTitle className="text-sm font-medium">Total Revenue (MRR)</CardTitle>
@@ -53,6 +53,16 @@ export default function FinancialsPage() {
                     <CardContent>
                         <div className="text-2xl font-bold">UGX 45,800,000</div>
                         <p className="text-xs text-muted-foreground">Gross merchandise value this month</p>
+                    </CardContent>
+                </Card>
+                <Card>
+                    <CardHeader className="flex flex-row items-center justify-between pb-2">
+                        <CardTitle className="text-sm font-medium">AI Credit Sales</CardTitle>
+                        <Coins className="h-4 w-4 text-muted-foreground"/>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="text-2xl font-bold">UGX 245,000</div>
+                        <p className="text-xs text-muted-foreground">From one-time purchases this month</p>
                     </CardContent>
                 </Card>
             </div>
