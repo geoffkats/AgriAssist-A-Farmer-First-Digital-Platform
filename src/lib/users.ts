@@ -7,7 +7,7 @@ type User = {
     name: string;
     email: string;
     passwordHash: string; // In a real app, never store plain text passwords
-    role: 'user' | 'admin';
+    role: 'user' | 'admin' | 'buyer';
     isPro: boolean;
     aiCredits: number;
 };
@@ -65,6 +65,16 @@ class UserStore {
             isPro: true,
             aiCredits: 200,
         });
+        
+        // Add a default buyer user
+        this.userList.push({
+            name: 'Agro Processors',
+            email: 'buyer.user@agriassist.app',
+            passwordHash: this.hashPassword('buyerpass'),
+            role: 'buyer',
+            isPro: true,
+            aiCredits: 200,
+        });
     }
 
     private hashPassword(password: string): string {
@@ -76,7 +86,7 @@ class UserStore {
         return this.hashPassword(password) === hash;
     }
 
-    addUser(name: string, email: string, password: string): User {
+    addUser(name: string, email: string, password: string, role: 'user' | 'buyer' = 'user'): User {
         if (this.userList.find(u => u.email === email)) {
             throw new Error('User with this email already exists.');
         }
@@ -84,9 +94,9 @@ class UserStore {
             name,
             email,
             passwordHash: this.hashPassword(password),
-            role: 'user',
-            isPro: false,
-            aiCredits: 15,
+            role,
+            isPro: role === 'buyer', // Buyers are pro by default
+            aiCredits: role === 'buyer' ? 200 : 15,
         };
         this.userList.push(newUser);
         return newUser;

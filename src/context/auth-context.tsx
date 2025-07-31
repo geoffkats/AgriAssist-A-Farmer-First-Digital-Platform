@@ -7,7 +7,7 @@ import { users } from '@/lib/users';
 type User = {
     name: string;
     email: string;
-    role: 'user' | 'admin';
+    role: 'user' | 'admin' | 'buyer';
     isPro: boolean;
     aiCredits: number;
 };
@@ -16,7 +16,7 @@ type AuthContextType = {
   user: User | null;
   loading: boolean;
   login: (email: string, password: string) => Promise<User>;
-  signup: (name: string, email: string, password: string) => Promise<void>;
+  signup: (name: string, email: string, password: string, role?: 'user' | 'buyer') => Promise<void>;
   logout: () => void;
   updateUser: (user: User) => void;
 };
@@ -54,9 +54,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const signup = async (name: string, email: string, password: string) => {
+  const signup = async (name: string, email: string, password: string, role: 'user' | 'buyer' = 'user') => {
     try {
-        users.addUser(name, email, password);
+        users.addUser(name, email, password, role);
     } catch (error) {
         throw error;
     }

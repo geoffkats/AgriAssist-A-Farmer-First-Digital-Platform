@@ -122,7 +122,11 @@ export default function LoginPage() {
            <p className="text-center text-sm text-muted-foreground pt-4">
             Don&apos;t have an account?{' '}
             <Link href="/signup" className="font-medium text-primary hover:underline">
-              Sign up
+              Sign up as a Farmer
+            </Link>
+             {' or '}
+            <Link href="/signup-buyer" className="font-medium text-primary hover:underline">
+              as a Buyer
             </Link>
           </p>
         </CardFooter>
