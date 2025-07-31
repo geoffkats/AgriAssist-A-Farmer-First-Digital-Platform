@@ -1,3 +1,4 @@
+
 "use client"
 
 import * as React from "react"
@@ -153,9 +154,11 @@ const ChartTooltipContent = React.forwardRef<
           </div>
         )
       }
-      
-       if(item.payload && typeof item.payload === 'object' && 'name' in item.payload) {
-        value = item.payload.name;
+
+      if (item.payload && typeof item.payload === 'object' && 'season' in item.payload) {
+          value = item.payload.season;
+      } else if (item.payload && typeof item.payload === 'object' && 'month' in item.payload) {
+        value = item.payload.month
       }
 
       if (!value) {
@@ -367,5 +370,3 @@ export {
   ChartLegendContent,
   ChartStyle,
 }
-
-    

@@ -7,8 +7,8 @@ import { useProStatus } from '@/context/pro-status-context';
 import { BarChart as BarChartIcon, Download, FileText, LineChart, Star, Sun, Cloud, CloudRain, Wind, BarChart2 } from 'lucide-react';
 import Link from 'next/link';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Bar, Line as RechartsLine, LineChart as RechartsLineChart, BarChart as RechartsBarChart } from 'recharts';
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
+import { ResponsiveContainer, AreaChart as RechartsAreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Bar, Line as RechartsLine, LineChart as RechartsLineChart, BarChart as RechartsBarChart } from 'recharts';
+import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from '@/components/ui/chart';
 
 
 const yieldData = [
@@ -19,6 +19,17 @@ const yieldData = [
   { season: '2024-A', maize: 3.5, beans: 1.8 },
 ];
 
+const yieldChartConfig = {
+    maize: {
+        label: 'Maize',
+        color: 'hsl(var(--primary))',
+    },
+    beans: {
+        label: 'Beans',
+        color: 'hsl(var(--accent))',
+    },
+} satisfies ChartConfig;
+
 const spendingData = [
   { month: 'Jan', seeds: 150000, fertilizers: 250000, agrochemicals: 80000 },
   { month: 'Feb', seeds: 180000, fertilizers: 300000, agrochemicals: 100000 },
@@ -27,6 +38,21 @@ const spendingData = [
   { month: 'May', seeds: 90000, fertilizers: 150000, agrochemicals: 50000 },
 ];
 
+const spendingChartConfig = {
+    seeds: {
+        label: 'Seeds',
+        color: 'hsl(var(--chart-1))',
+    },
+    fertilizers: {
+        label: 'Fertilizers',
+        color: 'hsl(var(--chart-2))',
+    },
+    agrochemicals: {
+        label: 'Agrochemicals',
+        color: 'hsl(var(--chart-3))',
+    },
+} satisfies ChartConfig;
+
 const revenueForecastData = [
     { month: 'Aug', revenue: 4500000 },
     { month: 'Sep', revenue: 4800000 },
@@ -34,6 +60,13 @@ const revenueForecastData = [
     { month: 'Nov', revenue: 6000000 },
     { month: 'Dec', revenue: 7500000 },
 ];
+
+const revenueChartConfig = {
+    revenue: {
+        label: 'Revenue',
+        color: 'hsl(var(--primary))',
+    }
+} satisfies ChartConfig;
 
 const weatherData = {
     current: { temp: 24, condition: 'Partly Cloudy', icon: Cloud, wind: '12 km/h' },
@@ -114,20 +147,20 @@ export default function AnalyticsPage() {
                         <CardTitle className="flex items-center gap-2"><BarChart2 className="text-primary"/> Yield Performance (Tons/Acre)</CardTitle>
                     </CardHeader>
                     <CardContent className="h-[250px]">
-                        <ResponsiveContainer width="100%" height="100%">
+                        <ChartContainer config={yieldChartConfig} className="w-full h-full">
                              <RechartsBarChart data={yieldData}>
                                 <CartesianGrid vertical={false} />
                                 <XAxis dataKey="season" tick={{ fontSize: 12 }} tickLine={false} axisLine={false}/>
                                 <YAxis tick={{ fontSize: 12 }} tickLine={false} axisLine={false}/>
-                                <Tooltip
+                                <ChartTooltip
                                     cursor={{fill: 'hsl(var(--muted))'}}
                                     content={<ChartTooltipContent />}
                                 />
                                 <Legend />
-                                <Bar dataKey="maize" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />
-                                <Bar dataKey="beans" fill="hsl(var(--accent))" radius={[4, 4, 0, 0]} />
+                                <Bar dataKey="maize" fill="var(--color-maize)" radius={[4, 4, 0, 0]} />
+                                <Bar dataKey="beans" fill="var(--color-beans)" radius={[4, 4, 0, 0]} />
                             </RechartsBarChart>
-                        </ResponsiveContainer>
+                        </ChartContainer>
                     </CardContent>
                 </Card>
             </div>
@@ -135,22 +168,22 @@ export default function AnalyticsPage() {
             <div className="grid gap-6 md:grid-cols-2">
                 <Card>
                     <CardHeader>
-                        <CardTitle className="flex items-center gap-2"><AreaChart className="text-primary"/> Input Spending Analysis (UGX)</CardTitle>
+                        <CardTitle className="flex items-center gap-2"><LineChartIcon className="text-primary"/> Input Spending Analysis (UGX)</CardTitle>
                          <CardDescription>Monthly expenditure on farm inputs.</CardDescription>
                     </CardHeader>
                     <CardContent className="h-[300px]">
-                       <ResponsiveContainer width="100%" height="100%">
-                            <AreaChart data={spendingData}>
+                       <ChartContainer config={spendingChartConfig} className="w-full h-full">
+                            <RechartsAreaChart data={spendingData} accessibilityLayer>
                                 <CartesianGrid strokeDasharray="3 3" />
                                 <XAxis dataKey="month" tick={{fontSize: 12}} />
                                 <YAxis tick={{fontSize: 12}} tickFormatter={(value) => `${value/1000}k`} />
-                                <Tooltip content={<ChartTooltipContent />} />
+                                <ChartTooltip content={<ChartTooltipContent />} />
                                 <Legend />
-                                <Area type="monotone" dataKey="seeds" stackId="1" stroke="hsl(var(--chart-1))" fill="hsl(var(--chart-1))" fillOpacity={0.4} />
-                                <Area type="monotone" dataKey="fertilizers" stackId="1" stroke="hsl(var(--chart-2))" fill="hsl(var(--chart-2))" fillOpacity={0.4} />
-                                <Area type="monotone" dataKey="agrochemicals" stackId="1" stroke="hsl(var(--chart-3))" fill="hsl(var(--chart-3))" fillOpacity={0.4} />
-                            </AreaChart>
-                        </ResponsiveContainer>
+                                <Area type="monotone" dataKey="seeds" fill="var(--color-seeds)" fillOpacity={0.4} stroke="var(--color-seeds)" stackId="1" />
+                                <Area type="monotone" dataKey="fertilizers" fill="var(--color-fertilizers)" fillOpacity={0.4} stroke="var(--color-fertilizers)" stackId="1" />
+                                <Area type="monotone" dataKey="agrochemicals" fill="var(--color-agrochemicals)" fillOpacity={0.4} stroke="var(--color-agrochemicals)" stackId="1" />
+                            </RechartsAreaChart>
+                        </ChartContainer>
                     </CardContent>
                 </Card>
                 <Card>
@@ -159,15 +192,15 @@ export default function AnalyticsPage() {
                         <CardDescription>Projected revenue based on current yield and market trends.</CardDescription>
                     </CardHeader>
                      <CardContent className="h-[300px]">
-                        <ResponsiveContainer width="100%" height="100%">
+                        <ChartContainer config={revenueChartConfig} className="w-full h-full">
                             <RechartsLineChart data={revenueForecastData}>
                                 <CartesianGrid strokeDasharray="3 3" />
                                 <XAxis dataKey="month" tick={{fontSize: 12}}/>
                                 <YAxis tick={{fontSize: 12}} tickFormatter={(value) => `${value/1000000}M`}/>
-                                <Tooltip content={<ChartTooltipContent />} />
-                                <RechartsLine type="monotone" dataKey="revenue" stroke="hsl(var(--primary))" strokeWidth={3} dot={{r: 6}} activeDot={{r: 8}}/>
+                                <ChartTooltip content={<ChartTooltipContent />} />
+                                <RechartsLine type="monotone" dataKey="revenue" stroke="var(--color-revenue)" strokeWidth={3} dot={{r: 6}} activeDot={{r: 8}}/>
                             </RechartsLineChart>
-                        </ResponsiveContainer>
+                        </ChartContainer>
                     </CardContent>
                 </Card>
             </div>
