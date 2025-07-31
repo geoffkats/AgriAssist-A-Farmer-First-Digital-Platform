@@ -26,14 +26,13 @@ const proFeatures = [
   'Advanced credit & loan access',
   'Personalized analytics dashboards',
   'Automated financial reporting',
-  'Premium agronomy guides',
 ];
 
 const buyerFeatures = [
     'All Pro features, plus:',
-    'Post buy offers to farmer network',
-    'Access farmer & co-op analytics',
-    'Directly message co-operatives',
+    'Connect with farmers & co-ops',
+    'Verified Buyer Badge',
+    'Enhanced Company Profile',
     'Priority support',
 ]
 
