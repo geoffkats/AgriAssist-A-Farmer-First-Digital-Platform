@@ -43,10 +43,16 @@ const featureCards = [
   }
 ];
 
+const PlantPlaceholderIcon = () => (
+    <div className="w-16 h-16 bg-secondary flex items-center justify-center rounded-md shrink-0">
+        <Leaf className="w-8 h-8 text-muted-foreground" />
+    </div>
+);
+
 const marketplaceItems = [
-    { name: 'Drought-Resistant Maize Seeds', price: 'UGX 15,000/kg', image: 'https://placehold.co/300x200', hint: 'maize seeds', description: 'High-yield, drought-resistant maize seeds suitable for all regions of Uganda. Matures in 90-120 days.' },
-    { name: 'NPK 17-17-17 Fertilizer', price: 'UGX 180,000/bag', image: 'https://placehold.co/300x200', hint: 'fertilizer bag', description: 'A 50kg bag of balanced NPK fertilizer for promoting healthy plant growth and maximizing yield.' },
-    { name: 'Organic Pesticide', price: 'UGX 45,000/L', image: 'https://placehold.co/300x200', hint: 'pesticide bottle', description: '1-liter bottle of neem oil-based organic pesticide, effective against a wide range of common pests.' },
+    { name: 'Drought-Resistant Maize Seeds', price: 'UGX 15,000/kg', image: null, hint: 'maize seeds', description: 'High-yield, drought-resistant maize seeds suitable for all regions of Uganda. Matures in 90-120 days.' },
+    { name: 'NPK 17-17-17 Fertilizer', price: 'UGX 180,000/bag', image: null, hint: 'fertilizer bag', description: 'A 50kg bag of balanced NPK fertilizer for promoting healthy plant growth and maximizing yield.' },
+    { name: 'Organic Pesticide', price: 'UGX 45,000/L', image: null, hint: 'pesticide bottle', description: '1-liter bottle of neem oil-based organic pesticide, effective against a wide range of common pests.' },
 ];
 
 const agronomyGuides = [
@@ -120,7 +126,7 @@ export default function DashboardClientContent({ user }: DashboardClientContentP
             <CardContent className="grid gap-4">
                {marketplaceItems.map(item => (
                  <div key={item.name} className="flex items-center gap-4">
-                    <Image src={item.image} alt={item.name} width={64} height={64} className="rounded-md object-cover" data-ai-hint={item.hint} />
+                    <PlantPlaceholderIcon />
                     <div className="flex-grow">
                         <p className="font-semibold">{item.name}</p>
                         <p className="text-sm text-muted-foreground">{item.price}</p>
@@ -160,7 +166,9 @@ export default function DashboardClientContent({ user }: DashboardClientContentP
             </DialogDescription>
           </DialogHeader>
           <div className="py-4 space-y-4">
-             <Image src={selectedProduct?.image} alt={selectedProduct?.name} width={400} height={300} className="w-full h-48 object-cover rounded-md" />
+            <div className="w-full h-48 bg-secondary flex items-center justify-center rounded-md">
+              <Leaf className="w-16 h-16 text-muted-foreground" />
+            </div>
              <p className="text-muted-foreground">{selectedProduct?.description}</p>
           </div>
           <DialogFooter>
@@ -175,5 +183,3 @@ export default function DashboardClientContent({ user }: DashboardClientContentP
     </div>
   );
 }
-
-    

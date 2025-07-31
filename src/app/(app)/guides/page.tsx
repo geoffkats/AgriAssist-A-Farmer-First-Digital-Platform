@@ -3,17 +3,17 @@ import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Search, Video, FileText, Mic, PlayCircle } from 'lucide-react';
+import { Search, Video, FileText, Mic, PlayCircle, Leaf } from 'lucide-react';
 import Image from 'next/image';
 import { Badge } from '@/components/ui/badge';
 
 const guides = [
-  { title: 'Video: Proper Fertilizer Application for Maize', type: 'Video', category: 'Crop Management', image: 'https://placehold.co/400x225', hint: 'farmer fertilizer' },
-  { title: 'Guide: Identifying Fall Armyworm in Uganda', type: 'PDF', category: 'Pest Control', image: 'https://placehold.co/400x225', hint: 'maize pest' },
-  { title: 'Audio: Post-Harvest Handling for Coffee Beans', type: 'Audio', category: 'Post-Harvest', image: 'https://placehold.co/400x225', hint: 'coffee beans' },
-  { title: 'Video: Setting Up Drip Irrigation Systems', type: 'Video', category: 'Water Management', image: 'https://placehold.co/400x225', hint: 'drip irrigation' },
-  { title: 'Guide: Soil Testing and Health Management', type: 'PDF', category: 'Soil Health', image: 'https://placehold.co/400x225', hint: 'soil sample' },
-  { title: 'Audio: Market Negotiation Tactics for Smallholders', type: 'Audio', category: 'Business Skills', image: 'https://placehold.co/400x225', hint: 'market negotiation' },
+  { title: 'Video: Proper Fertilizer Application for Maize', type: 'Video', category: 'Crop Management', image: null, hint: 'farmer fertilizer' },
+  { title: 'Guide: Identifying Fall Armyworm in Uganda', type: 'PDF', category: 'Pest Control', image: null, hint: 'maize pest' },
+  { title: 'Audio: Post-Harvest Handling for Coffee Beans', type: 'Audio', category: 'Post-Harvest', image: null, hint: 'coffee beans' },
+  { title: 'Video: Setting Up Drip Irrigation Systems', type: 'Video', category: 'Water Management', image: null, hint: 'drip irrigation' },
+  { title: 'Guide: Soil Testing and Health Management', type: 'PDF', category: 'Soil Health', image: null, hint: 'soil sample' },
+  { title: 'Audio: Market Negotiation Tactics for Smallholders', type: 'Audio', category: 'Business Skills', image: null, hint: 'market negotiation' },
 ];
 
 const GuideIcon = ({ type }: { type: string }) => {
@@ -22,6 +22,13 @@ const GuideIcon = ({ type }: { type: string }) => {
     if (type === 'Audio') return <Mic className="h-4 w-4" />;
     return null;
 }
+
+const GuidePlaceholder = () => (
+    <div className="w-full h-48 bg-secondary flex items-center justify-center">
+        <Leaf className="w-16 h-16 text-muted-foreground" />
+    </div>
+);
+
 
 export default function GuidesPage() {
   return (
@@ -53,7 +60,7 @@ export default function GuidesPage() {
         {guides.map((guide) => (
           <Card key={guide.title} className="flex flex-col overflow-hidden group">
             <div className="relative">
-              <Image src={guide.image} alt={guide.title} width={400} height={225} className="object-cover w-full h-48 transition-transform duration-300 group-hover:scale-105" data-ai-hint={guide.hint} />
+              <GuidePlaceholder />
               <div className="absolute inset-0 bg-black/30 group-hover:bg-black/50 transition-colors" />
                <Badge className="absolute top-3 right-3 bg-black/50 text-white border-white/20">
                 <GuideIcon type={guide.type} /> <span className="ml-1.5">{guide.type}</span>
