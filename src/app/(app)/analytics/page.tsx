@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { useProStatus } from '@/context/pro-status-context';
 import { BarChart, Download, FileText, LineChart, Loader2, Star } from 'lucide-react';
 import Link from 'next/link';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 
 export default function AnalyticsPage() {
     const { isPro } = useProStatus();
@@ -80,21 +81,32 @@ export default function AnalyticsPage() {
                     <CardTitle>Automated Reports</CardTitle>
                     <CardDescription>Generate and download reports with a single click.</CardDescription>
                 </CardHeader>
-                <CardContent className="grid gap-4 md:grid-cols-2">
-                    <div className="flex items-center justify-between p-4 border rounded-lg">
-                        <div>
-                            <p className="font-semibold">Full Profit & Loss Statement</p>
-                            <p className="text-sm text-muted-foreground">For banking or grant applications</p>
-                        </div>
-                        <Button disabled><Download className="mr-2" /> Download PDF</Button>
-                    </div>
-                    <div className="flex items-center justify-between p-4 border rounded-lg">
-                        <div>
-                            <p className="font-semibold">Input Spend Summary</p>
-                            <p className="text-sm text-muted-foreground">For accounting and budgeting</p>
-                        </div>
-                        <Button disabled><FileText className="mr-2" /> Export CSV</Button>
-                    </div>
+                <CardContent>
+                   <Table>
+                        <TableHeader>
+                            <TableRow>
+                                <TableHead>Report Name</TableHead>
+                                <TableHead>Description</TableHead>
+                                <TableHead className="text-right">Actions</TableHead>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                            <TableRow>
+                                <TableCell className="font-semibold">Full Profit & Loss Statement</TableCell>
+                                <TableCell className="text-muted-foreground">For banking or grant applications</TableCell>
+                                <TableCell className="text-right">
+                                    <Button disabled><Download className="mr-2" /> Download PDF</Button>
+                                </TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell className="font-semibold">Input Spend Summary</TableCell>
+                                <TableCell className="text-muted-foreground">For accounting and budgeting</TableCell>
+                                <TableCell className="text-right">
+                                    <Button disabled><FileText className="mr-2" /> Export CSV</Button>
+                                </TableCell>
+                            </TableRow>
+                        </TableBody>
+                    </Table>
                 </CardContent>
             </Card>
         </div>
