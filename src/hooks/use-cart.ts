@@ -6,7 +6,7 @@ import { persist, createJSONStorage } from 'zustand/middleware';
 
 export interface CartItem {
   name: string;
-  price: string;
+  price: string | number;
   image: string;
   hint?: string;
   description?: string;
@@ -35,5 +35,3 @@ export const useCart = create<CartState>()(
     }
   )
 );
-
-    

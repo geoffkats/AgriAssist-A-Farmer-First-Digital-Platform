@@ -59,7 +59,8 @@ const adminNavItems = [
 function CartSheet() {
   const { cart, removeFromCart, clearCart } = useCart();
   const subtotal = cart.reduce((acc, item) => {
-    const price = parseFloat(item.price.replace(/[^0-9.-]+/g, ""));
+    const priceAsString = typeof item.price === 'string' ? item.price : String(item.price);
+    const price = parseFloat(priceAsString.replace(/[^0-9.-]+/g, ""));
     return acc + price;
   }, 0);
 
@@ -87,7 +88,7 @@ function CartSheet() {
                             </div>
                             <div className="flex-grow">
                                 <p className="font-semibold">{item.name}</p>
-                                <p className="text-sm text-muted-foreground">{item.price}</p>
+                                <p className="text-sm text-muted-foreground">UGX {Number(item.price).toLocaleString()}</p>
                             </div>
                              <Button variant="ghost" size="icon" onClick={() => removeFromCart(item.name)}>
                                 <X className="h-4 w-4" />
