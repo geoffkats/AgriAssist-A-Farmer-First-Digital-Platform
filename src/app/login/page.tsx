@@ -10,7 +10,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Wheat } from 'lucide-react';
+import { Loader2, Wheat, User, Shield, Building } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 
 function GoogleIcon(props: React.SVGProps<SVGSVGElement>) {
@@ -32,21 +32,29 @@ export default function LoginPage() {
   const { login } = useAuth();
   const { toast } = useToast();
 
-  const handleLogin = async (isAdmin = false) => {
+  const handleLogin = async (loginType?: 'admin' | 'buyer') => {
     setLoading(true);
-    const loginEmail = isAdmin ? 'admin@agriassist.app' : email;
-    const loginPassword = isAdmin ? 'adminpass' : password;
+    let loginEmail = email;
+    let loginPassword = password;
+
+    if (loginType === 'admin') {
+      loginEmail = 'admin@agriassist.app';
+      loginPassword = 'adminpass';
+    } else if (loginType === 'buyer') {
+        loginEmail = 'buyer.user@agriassist.app';
+        loginPassword = 'buyerpass';
+    }
 
     try {
       const user = await login(loginEmail, loginPassword);
       toast({
         title: 'Login Successful',
-        description: `Welcome back${user.role === 'admin' ? ', Admin' : ''}!`,
+        description: `Welcome back, ${user.name.split(' ')[0]}!`,
       });
       if (user.role === 'admin') {
         router.push('/admin/dashboard');
       } else {
-        router.push('/');
+        router.push(user.role === 'buyer' ? '/buyers' : '/');
       }
     } catch (error) {
       toast({
@@ -103,7 +111,7 @@ export default function LoginPage() {
           </div>
         </CardContent>
         <CardFooter className="flex flex-col gap-4">
-          <Button className="w-full" onClick={() => handleLogin(false)} disabled={loading}>
+          <Button className="w-full" onClick={() => handleLogin()} disabled={loading}>
             {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             Sign In
           </Button>
@@ -111,14 +119,23 @@ export default function LoginPage() {
             <Separator className="my-2" />
             <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-card px-2 text-xs text-muted-foreground">OR</span>
           </div>
-          <Button variant="outline" className="w-full" onClick={handleGoogleLogin} disabled={loading}>
+           <Button variant="outline" className="w-full" onClick={handleGoogleLogin} disabled={loading}>
              {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <GoogleIcon className="mr-2 h-5 w-5" />}
             Sign in with Google
           </Button>
-          <Button variant="secondary" className="w-full" onClick={() => handleLogin(true)} disabled={loading}>
-            {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            Sign In as Admin
-          </Button>
+           <p className="text-center text-xs text-muted-foreground">
+            For simulation purposes:
+          </p>
+          <div className="grid grid-cols-2 gap-2 w-full">
+             <Button variant="secondary" className="w-full" onClick={() => handleLogin('admin')} disabled={loading}>
+                {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Shield />}
+                Admin
+            </Button>
+            <Button variant="secondary" className="w-full" onClick={() => handleLogin('buyer')} disabled={loading}>
+                {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Building />}
+                Buyer
+            </Button>
+          </div>
            <p className="text-center text-sm text-muted-foreground pt-4">
             Don&apos;t have an account?{' '}
             <Link href="/signup" className="font-medium text-primary hover:underline">
