@@ -168,7 +168,7 @@ export default function AnalyticsPage() {
             <div className="grid gap-6 md:grid-cols-2">
                 <Card>
                     <CardHeader>
-                        <CardTitle className="flex items-center gap-2"><LineChartIcon className="text-primary"/> Input Spending Analysis (UGX)</CardTitle>
+                        <CardTitle className="flex items-center gap-2"><LineChart className="text-primary"/> Input Spending Analysis (UGX)</CardTitle>
                          <CardDescription>Monthly expenditure on farm inputs.</CardDescription>
                     </CardHeader>
                     <CardContent className="h-[300px]">
