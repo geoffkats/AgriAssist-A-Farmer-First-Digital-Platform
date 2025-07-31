@@ -55,6 +55,16 @@ class UserStore {
             isPro: false,
             aiCredits: 0,
         });
+
+        // Add a default pro user
+        this.userList.push({
+            name: 'Pro Farmer',
+            email: 'pro@agriassist.app',
+            passwordHash: this.hashPassword('propass'),
+            role: 'user',
+            isPro: true,
+            aiCredits: 200,
+        });
     }
 
     private hashPassword(password: string): string {

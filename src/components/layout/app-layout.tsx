@@ -3,7 +3,7 @@
 
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { Bot, Home, Landmark, MessageSquare, BookOpen, ShoppingBasket, TrendingUp, Users, Wheat, Star, AreaChart, LogOut, User, Shield, Briefcase, Settings, Package, Banknote, MessageCircle, FileText, UserCog, Library, Truck, Group, Wand2, ShoppingCart, X } from 'lucide-react';
+import { Bot, Home, Landmark, MessageSquare, BookOpen, ShoppingBasket, TrendingUp, Users, Wheat, Star, AreaChart, LogOut, User, Shield, Briefcase, Settings, Package, Banknote, MessageCircle, FileText, UserCog, Library, Truck, Group, Wand2, ShoppingCart, X, Coins } from 'lucide-react';
 import {
   SidebarProvider,
   Sidebar,
@@ -148,7 +148,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                     </Avatar>
                     <div className="flex flex-col group-data-[collapsible=icon]:hidden">
                       <span className="text-sm font-semibold truncate">{user.name}</span>
-                      <span className="text-xs text-muted-foreground capitalize">{user.role}</span>
+                      <span className="text-xs text-muted-foreground capitalize">{isPro ? 'Pro' : 'Free'} User</span>
                     </div>
                   </div>
                    {user.role === 'user' && (
@@ -184,7 +184,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
               </SidebarGroup>
             ))}
             
-            {!isPro && user?.role === 'user' && (
+            {user?.role === 'user' && (
               <SidebarGroup>
                 <SidebarGroupLabel>Usage</SidebarGroupLabel>
                  <SidebarMenuItem>
@@ -197,6 +197,18 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                       <span className="truncate">AI Credits: {aiCredits}</span>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
+                   <SidebarMenuItem>
+                      <SidebarMenuButton
+                        asChild
+                        isActive={pathname === '/pricing'}
+                        tooltip={{ children: 'Buy Credits', side: 'right', align: 'center' }}
+                      >
+                        <Link href="/pricing">
+                          <Coins />
+                          <span className="truncate">Buy Credits</span>
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
               </SidebarGroup>
             )}
 
@@ -222,7 +234,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
               </CardHeader>
               <CardContent className="p-3 pt-0 group-data-[collapsible=icon]:p-0">
                   <div className="group-data-[collapsible=icon]:hidden">
-                    <p className="text-xs text-primary-foreground/80 mb-3">Get AI price predictions, loan access, and more.</p>
+                    <p className="text-xs text-primary-foreground/80 mb-3">Get more credits, loan access, and advanced analytics.</p>
                     <Button asChild size="sm" className="w-full bg-background text-foreground hover:bg-background/90">
                         <Link href="/pricing">Go Pro</Link>
                     </Button>
@@ -256,5 +268,3 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     </SidebarProvider>
   );
 }
-
-    

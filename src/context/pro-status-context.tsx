@@ -28,15 +28,15 @@ export const ProStatusProvider = ({ children }: { children: ReactNode }) => {
 
   const upgradeToPro = () => {
     if (user) {
-        const updatedUser = { ...user, isPro: true, aiCredits: Infinity };
+        const updatedUser = { ...user, isPro: true, aiCredits: 200 };
         updateUser(updatedUser);
         setIsPro(true);
-        setAiCredits(Infinity);
+        setAiCredits(200);
     }
   };
 
   const consumeCredit = () => {
-    if (user && !user.isPro && aiCredits > 0) {
+    if (user && aiCredits > 0) {
         const newCredits = aiCredits - 1;
         setAiCredits(newCredits);
         const updatedUser = { ...user, aiCredits: newCredits };
@@ -45,7 +45,7 @@ export const ProStatusProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const addCredits = (amount: number) => {
-     if (user && !user.isPro) {
+     if (user) {
         const newCredits = aiCredits + amount;
         setAiCredits(newCredits);
         const updatedUser = { ...user, aiCredits: newCredits };

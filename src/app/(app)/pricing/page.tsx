@@ -19,8 +19,8 @@ const freeFeatures = [
 ];
 
 const proFeatures = [
-  'Unlimited AI price forecasts',
-  'Unlimited AI pest & disease diagnosis',
+  'All Free features, plus:',
+  '200 AI Credits per month',
   'Advanced credit & loan access',
   'Personalized analytics dashboards',
   'Automated financial reporting',
