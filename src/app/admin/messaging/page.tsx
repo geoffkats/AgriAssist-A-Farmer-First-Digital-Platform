@@ -38,15 +38,15 @@ export default function MessagingPage() {
                             <CardTitle>Compose New Broadcast</CardTitle>
                             <CardDescription>Send a message to a targeted group of users.</CardDescription>
                         </CardHeader>
-                        <CardContent className="grid gap-6">
+                        <CardContent className="space-y-8">
                            <div className="space-y-2">
-                                <Label htmlFor="message">Message</Label>
+                                <Label htmlFor="message" className="text-base">Message</Label>
                                 <Textarea id="message" placeholder="Type your notification message here. You can include details about new features, market price alerts, or important announcements." rows={4} />
                             </div>
-                            <div className="grid md:grid-cols-2 gap-6">
-                                <div className="space-y-2">
-                                    <Label>Target Audience</Label>
-                                    <div className="grid gap-4">
+                            <div className="grid md:grid-cols-2 gap-8">
+                                <div className="space-y-4">
+                                    <Label className="text-base">Target Audience</Label>
+                                    <div className="space-y-4">
                                         <Select defaultValue="all">
                                             <SelectTrigger>
                                                 <SelectValue placeholder="Select user group" />
@@ -81,27 +81,27 @@ export default function MessagingPage() {
                                         </Select>
                                     </div>
                                 </div>
-                                <div className="space-y-2">
-                                    <Label>Delivery Channels</Label>
-                                    <div className="flex flex-col gap-4 p-4 border rounded-md">
+                                <div className="space-y-4">
+                                    <Label className="text-base">Delivery Channels</Label>
+                                    <div className="flex flex-col gap-4 p-4 border rounded-md bg-secondary/50">
                                         <div className="flex items-center space-x-2">
                                             <Checkbox id="push" defaultChecked />
-                                            <Label htmlFor="push">Push Notification</Label>
+                                            <Label htmlFor="push" className="font-normal">Push Notification</Label>
                                         </div>
                                          <div className="flex items-center space-x-2">
                                             <Checkbox id="sms" />
-                                            <Label htmlFor="sms">SMS Fallback (for users without data)</Label>
+                                            <Label htmlFor="sms" className="font-normal">SMS Fallback (for users without data)</Label>
                                         </div>
                                          <div className="flex items-center space-x-2">
                                             <Checkbox id="in-app" />
-                                            <Label htmlFor="in-app">In-App Banner</Label>
+                                            <Label htmlFor="in-app" className="font-normal">In-App Banner</Label>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </CardContent>
                         <CardFooter>
-                            <Button><Send className="mr-2" /> Send Broadcast</Button>
+                            <Button size="lg"><Send className="mr-2" /> Send Broadcast</Button>
                         </CardFooter>
                     </Card>
                 </TabsContent>
