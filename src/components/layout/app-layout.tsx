@@ -82,7 +82,9 @@ function CartSheet() {
                     <div className="flex-grow overflow-y-auto -mx-6 px-6 py-4 space-y-4">
                         {cart.map((item, index) => (
                         <div key={index} className="flex items-center gap-4">
-                            <Image src={item.image} alt={item.name} width={64} height={64} className="rounded-md object-cover" />
+                            <div className="w-16 h-16 bg-secondary flex items-center justify-center rounded-md shrink-0">
+                                <Leaf className="w-8 h-8 text-muted-foreground" />
+                            </div>
                             <div className="flex-grow">
                                 <p className="font-semibold">{item.name}</p>
                                 <p className="text-sm text-muted-foreground">{item.price}</p>
@@ -151,7 +153,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                       <span className="text-xs text-muted-foreground capitalize">{user.role === 'user' ? (isPro ? 'Pro User' : 'Free User') : user.role}</span>
                     </div>
                   </div>
-                   {user.role === 'user' && (
+                   {(user.role === 'user' || user.role === 'buyer') && (
                      <div className="group-data-[collapsible=icon]:hidden">
                       <CartSheet />
                     </div>
