@@ -3,7 +3,7 @@
 
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { Bot, Home, Landmark, MessageSquare, BookOpen, ShoppingBasket, TrendingUp, Users, Wheat, Star, AreaChart, LogOut, User, Shield, Briefcase, Settings, Package, Banknote, MessageCircle, FileText, UserCog, Library, Truck, Group, Wand2, ShoppingCart, X, Coins } from 'lucide-react';
+import { Bot, Home, Landmark, MessageSquare, BookOpen, ShoppingBasket, TrendingUp, Users, Wheat, Star, AreaChart, LogOut, User, Shield, Briefcase, Settings, Package, Banknote, MessageCircle, FileText, UserCog, Library, Truck, Group, Wand2, ShoppingCart, X, Coins, Leaf } from 'lucide-react';
 import {
   SidebarProvider,
   Sidebar,
@@ -61,7 +61,7 @@ function CartSheet() {
   const subtotal = cart.reduce((acc, item) => {
     const priceAsString = typeof item.price === 'string' ? item.price : String(item.price);
     const price = parseFloat(priceAsString.replace(/[^0-9.-]+/g, ""));
-    return acc + price;
+    return acc + (isNaN(price) ? 0 : price);
   }, 0);
 
   return (
