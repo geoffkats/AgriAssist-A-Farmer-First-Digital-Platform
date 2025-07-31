@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import Link from 'next/link';
@@ -59,6 +60,7 @@ const adminNavItems = [
 function CartSheet() {
   const { cart, removeFromCart, clearCart } = useCart();
   const subtotal = cart.reduce((acc, item) => {
+    // Ensure item.price is a string before calling .replace()
     const priceAsString = typeof item.price === 'string' ? item.price : String(item.price);
     const price = parseFloat(priceAsString.replace(/[^0-9.-]+/g, ""));
     return acc + (isNaN(price) ? 0 : price);
@@ -96,13 +98,15 @@ function CartSheet() {
                         </div>
                         ))}
                     </div>
-                     <SheetFooter className="flex-col !space-x-0 gap-4 border-t pt-4">
+                     <SheetFooter className="border-t pt-4 space-y-4">
                          <div className="flex justify-between font-semibold text-lg">
                             <span>Subtotal</span>
                             <span>UGX {subtotal.toLocaleString()}</span>
                          </div>
-                        <Button className="w-full">Proceed to Checkout</Button>
-                        <Button variant="outline" className="w-full" onClick={clearCart}>Clear Cart</Button>
+                         <div className="space-y-2">
+                            <Button className="w-full">Proceed to Checkout</Button>
+                            <Button variant="outline" className="w-full" onClick={clearCart}>Clear Cart</Button>
+                         </div>
                     </SheetFooter>
                 </div>
             ) : (
