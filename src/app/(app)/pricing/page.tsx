@@ -90,7 +90,7 @@ export default function PricingPage() {
             </CardTitle>
             <CardDescription>Advanced AI-powered tools for the commercial and entrepreneurial farmer.</CardDescription>
             <div className="pt-4">
-              <span className="text-4xl font-bold">UGX 5,000</span>
+              <span className="text-4xl font-bold">UGX 25,000</span>
               <span className="text-muted-foreground">/ month</span>
             </div>
           </CardHeader>

@@ -49,11 +49,11 @@ export default function SettingsPage() {
                                 <CardContent className="space-y-4">
                                     <div className="space-y-2">
                                         <Label htmlFor="monthly-price">Pro Plan - Monthly Price (UGX)</Label>
-                                        <Input id="monthly-price" defaultValue="5000"/>
+                                        <Input id="monthly-price" defaultValue="25000"/>
                                     </div>
                                     <div className="space-y-2">
                                         <Label htmlFor="yearly-price">Pro Plan - Yearly Price (UGX)</Label>
-                                        <Input id="yearly-price" defaultValue="50000"/>
+                                        <Input id="yearly-price" defaultValue="250000"/>
                                     </div>
                                     <Button>Save Pricing</Button>
                                 </CardContent>

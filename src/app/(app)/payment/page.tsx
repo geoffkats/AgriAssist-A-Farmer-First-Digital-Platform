@@ -68,7 +68,7 @@ export default function PaymentPage() {
       <header className="text-center max-w-2xl">
         <h1 className="text-4xl font-bold font-headline">Upgrade to Pro</h1>
         <p className="text-muted-foreground mt-2">
-          You're subscribing to the AgriAssist Pro plan for UGX 5,000/month.
+          You're subscribing to the AgriAssist Pro plan for UGX 25,000/month.
         </p>
       </header>
       <Card className="w-full max-w-lg">
@@ -140,7 +140,7 @@ export default function PaymentPage() {
             ) : (
               <CreditCard className="mr-2 h-4 w-4" />
             )}
-            {loading ? 'Processing Payment...' : 'Pay UGX 5,000 Now'}
+            {loading ? 'Processing Payment...' : 'Pay UGX 25,000 Now'}
           </Button>
           <p className="text-xs text-muted-foreground text-center">This is a payment simulation. No real payment will be processed.</p>
         </CardFooter>
