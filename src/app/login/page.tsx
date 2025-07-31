@@ -32,7 +32,7 @@ export default function LoginPage() {
   const { login } = useAuth();
   const { toast } = useToast();
 
-  const handleLogin = async (loginType?: 'admin' | 'buyer') => {
+  const handleLogin = async (loginType?: 'admin' | 'buyer' | 'farmer') => {
     setLoading(true);
     let loginEmail = email;
     let loginPassword = password;
@@ -43,7 +43,11 @@ export default function LoginPage() {
     } else if (loginType === 'buyer') {
         loginEmail = 'buyer.user@agriassist.app';
         loginPassword = 'buyerpass';
+    } else if (loginType === 'farmer') {
+        loginEmail = 'farmer@agriassist.app';
+        loginPassword = 'farmerpass';
     }
+
 
     try {
       const user = await login(loginEmail, loginPassword);
@@ -126,24 +130,24 @@ export default function LoginPage() {
            <p className="text-center text-xs text-muted-foreground">
             For simulation purposes:
           </p>
-          <div className="grid grid-cols-2 gap-2 w-full">
+          <div className="grid grid-cols-3 gap-2 w-full">
+             <Button variant="secondary" className="w-full" onClick={() => handleLogin('farmer')} disabled={loading}>
+                {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <User />}
+                Farmer
+            </Button>
+             <Button variant="secondary" className="w-full" onClick={() => handleLogin('buyer')} disabled={loading}>
+                {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Building />}
+                Buyer
+            </Button>
              <Button variant="secondary" className="w-full" onClick={() => handleLogin('admin')} disabled={loading}>
                 {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Shield />}
                 Admin
-            </Button>
-            <Button variant="secondary" className="w-full" onClick={() => handleLogin('buyer')} disabled={loading}>
-                {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Building />}
-                Buyer
             </Button>
           </div>
            <p className="text-center text-sm text-muted-foreground pt-4">
             Don&apos;t have an account?{' '}
             <Link href="/signup" className="font-medium text-primary hover:underline">
-              Sign up as a Farmer
-            </Link>
-             {' or '}
-            <Link href="/signup-buyer" className="font-medium text-primary hover:underline">
-              as a Buyer
+              Sign up
             </Link>
           </p>
         </CardFooter>
