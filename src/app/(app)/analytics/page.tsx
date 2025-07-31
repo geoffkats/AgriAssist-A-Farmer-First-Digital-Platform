@@ -4,10 +4,10 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useProStatus } from '@/context/pro-status-context';
-import { BarChart, Download, FileText, LineChart, Star, Sun, Cloud, CloudRain, Wind, BarChart2 } from 'lucide-react';
+import { BarChart as BarChartIcon, Download, FileText, LineChart, Star, Sun, Cloud, CloudRain, Wind, BarChart2 } from 'lucide-react';
 import Link from 'next/link';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Bar, Line as RechartsLine, LineChart as RechartsLineChart } from 'recharts';
+import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Bar, Line as RechartsLine, LineChart as RechartsLineChart, BarChart as RechartsBarChart } from 'recharts';
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
 
 
@@ -115,7 +115,7 @@ export default function AnalyticsPage() {
                     </CardHeader>
                     <CardContent className="h-[250px]">
                         <ResponsiveContainer width="100%" height="100%">
-                             <BarChart data={yieldData}>
+                             <RechartsBarChart data={yieldData}>
                                 <CartesianGrid vertical={false} />
                                 <XAxis dataKey="season" tick={{ fontSize: 12 }} tickLine={false} axisLine={false}/>
                                 <YAxis tick={{ fontSize: 12 }} tickLine={false} axisLine={false}/>
@@ -126,7 +126,7 @@ export default function AnalyticsPage() {
                                 <Legend />
                                 <Bar dataKey="maize" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />
                                 <Bar dataKey="beans" fill="hsl(var(--accent))" radius={[4, 4, 0, 0]} />
-                            </BarChart>
+                            </RechartsBarChart>
                         </ResponsiveContainer>
                     </CardContent>
                 </Card>
