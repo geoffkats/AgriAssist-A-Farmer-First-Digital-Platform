@@ -8,6 +8,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
 import { BuyCreditsDialog } from '@/components/buy-credits-dialog';
+import { cn } from '@/lib/utils';
 
 const freeFeatures = [
   'Daily market price listings',
@@ -28,13 +29,19 @@ const proFeatures = [
 ];
 
 const creditPacks = [
-  { credits: 20, price: 'UGX 2,000' },
-  { credits: 50, price: 'UGX 4,000' },
-  { credits: 100, price: 'UGX 7,000' },
+  { credits: 20, price: 'UGX 2,000', price_numeric: 2000 },
+  { credits: 50, price: 'UGX 4,000', price_numeric: 4000, popular: true },
+  { credits: 100, price: 'UGX 7,000', price_numeric: 7000 },
 ];
 
 export default function PricingPage() {
   const [isBuyCreditsOpen, setIsBuyCreditsOpen] = useState(false);
+  const [selectedPack, setSelectedPack] = useState(creditPacks[1]);
+
+  const openPurchaseModal = (pack: any) => {
+    setSelectedPack(pack);
+    setIsBuyCreditsOpen(true);
+  }
 
   return (
     <>
@@ -74,7 +81,7 @@ export default function PricingPage() {
           </CardFooter>
         </Card>
 
-        <Card className="flex flex-col border-primary ring-2 ring-primary">
+        <Card className="flex flex-col border-primary ring-2 ring-primary relative">
            <Badge className="absolute -top-3 left-1/2 -translate-x-1/2">Most Popular</Badge>
           <CardHeader>
             <CardTitle className="font-headline text-primary flex items-center gap-2">
@@ -112,21 +119,26 @@ export default function PricingPage() {
                 <CardTitle className="font-headline">Or, Top Up Your AI Credits</CardTitle>
                 <CardDescription>Not ready for Pro? Buy credits for one-time access to AI features.</CardDescription>
             </CardHeader>
-            <CardContent className="grid sm:grid-cols-3 gap-4">
+             <CardContent className="grid sm:grid-cols-3 gap-4">
                 {creditPacks.map((pack) => (
-                    <div key={pack.credits} className="flex items-center justify-between p-4 border rounded-lg">
-                        <div>
-                            <p className="text-2xl font-bold flex items-center gap-2">
+                    <Card 
+                        key={pack.credits} 
+                        className={cn("relative cursor-pointer hover:border-primary transition-colors", pack.popular && "border-primary")}
+                        onClick={() => openPurchaseModal(pack)}
+                    >
+                        {pack.popular && <Badge className="absolute -top-3 left-1/2 -translate-x-1/2">Popular</Badge>}
+                        <CardContent className="p-6 text-center">
+                            <p className="text-4xl font-bold flex items-center justify-center gap-2">
                                 <Coins className="text-primary"/> {pack.credits}
                             </p>
-                            <p className="text-sm text-muted-foreground">AI Credits</p>
-                        </div>
-                        <p className="text-lg font-semibold">{pack.price}</p>
-                    </div>
+                            <p className="text-sm text-muted-foreground mt-1">AI Credits</p>
+                            <p className="text-lg font-semibold mt-4">{pack.price}</p>
+                        </CardContent>
+                    </Card>
                 ))}
             </CardContent>
             <CardFooter className="justify-center">
-                <Button onClick={() => setIsBuyCreditsOpen(true)}>
+                <Button onClick={() => openPurchaseModal(creditPacks[1])}>
                     <Coins className="mr-2"/>
                     Purchase Credits
                 </Button>
@@ -134,7 +146,7 @@ export default function PricingPage() {
         </Card>
       </div>
     </div>
-    <BuyCreditsDialog open={isBuyCreditsOpen} onOpenChange={setIsBuyCreditsOpen} />
+    <BuyCreditsDialog open={isBuyCreditsOpen} onOpenChange={setIsBuyCreditsOpen} selectedPack={selectedPack} />
     </>
   );
 }

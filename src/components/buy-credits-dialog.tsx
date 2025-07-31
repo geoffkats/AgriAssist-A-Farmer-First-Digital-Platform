@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useProStatus } from '@/context/pro-status-context';
 import { useToast } from '@/hooks/use-toast';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
@@ -19,13 +19,20 @@ const creditPacks = [
 type BuyCreditsDialogProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  selectedPack?: any;
 };
 
-export function BuyCreditsDialog({ open, onOpenChange }: BuyCreditsDialogProps) {
-  const [selectedPack, setSelectedPack] = useState(creditPacks[1]);
+export function BuyCreditsDialog({ open, onOpenChange, selectedPack: initialSelectedPack }: BuyCreditsDialogProps) {
+  const [selectedPack, setSelectedPack] = useState(initialSelectedPack || creditPacks[1]);
   const [loading, setLoading] = useState(false);
   const { addCredits } = useProStatus();
   const { toast } = useToast();
+
+  useEffect(() => {
+    if(initialSelectedPack) {
+      setSelectedPack(initialSelectedPack);
+    }
+  }, [initialSelectedPack])
 
   const handlePurchase = () => {
     setLoading(true);
