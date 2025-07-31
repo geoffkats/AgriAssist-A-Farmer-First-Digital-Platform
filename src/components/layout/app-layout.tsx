@@ -148,7 +148,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                     </Avatar>
                     <div className="flex flex-col group-data-[collapsible=icon]:hidden">
                       <span className="text-sm font-semibold truncate">{user.name}</span>
-                      <span className="text-xs text-muted-foreground capitalize">{isPro ? 'Pro' : 'Free'} User</span>
+                      <span className="text-xs text-muted-foreground capitalize">{user.role === 'user' ? (isPro ? 'Pro User' : 'Free User') : user.role}</span>
                     </div>
                   </div>
                    {user.role === 'user' && (
@@ -184,6 +184,31 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
               </SidebarGroup>
             ))}
             
+            <SidebarGroup>
+                 <SidebarGroupLabel>Account</SidebarGroupLabel>
+                  <SidebarMenuItem>
+                      <SidebarMenuButton
+                        asChild
+                        isActive={pathname === '/profile'}
+                        tooltip={{ children: 'Profile Settings', side: 'right', align: 'center' }}
+                      >
+                        <Link href="/profile">
+                          <User />
+                          <span className="truncate">Profile</span>
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                     <SidebarMenuItem>
+                        <SidebarMenuButton
+                          onClick={handleLogout}
+                          tooltip={{ children: "Logout", side: 'right', align: 'center' }}
+                        >
+                          <LogOut />
+                          <span className="truncate">Logout</span>
+                        </SidebarMenuButton>
+                    </SidebarMenuItem>
+              </SidebarGroup>
+
             {user?.role === 'user' && (
               <SidebarGroup>
                 <SidebarGroupLabel>Usage</SidebarGroupLabel>
@@ -212,15 +237,6 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
               </SidebarGroup>
             )}
 
-            <SidebarMenuItem>
-                <SidebarMenuButton
-                  onClick={handleLogout}
-                  tooltip={{ children: "Logout", side: 'right', align: 'center' }}
-                >
-                  <LogOut />
-                  <span className="truncate">Logout</span>
-                </SidebarMenuButton>
-            </SidebarMenuItem>
           </SidebarMenu>
         </SidebarContent>
         <SidebarFooter>
