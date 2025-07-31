@@ -7,7 +7,7 @@ import { useProStatus } from '@/context/pro-status-context';
 import { BarChart, Download, FileText, LineChart, Star, Sun, Cloud, CloudRain, Wind, BarChart2 } from 'lucide-react';
 import Link from 'next/link';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Bar, Line as RechartsLine } from 'recharts';
+import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Bar, Line as RechartsLine, LineChart as RechartsLineChart } from 'recharts';
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
 
 
@@ -208,5 +208,3 @@ export default function AnalyticsPage() {
         </div>
     )
 }
-
-    
