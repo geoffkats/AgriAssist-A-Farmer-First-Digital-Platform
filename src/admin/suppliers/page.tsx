@@ -15,6 +15,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, Di
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
+import { cn } from '@/lib/utils';
+import { useToast } from '@/hooks/use-toast';
 
 
 const suppliers = [
@@ -31,8 +33,14 @@ const products = [
   { id: 'PROD04', name: 'Urea Fertilizer', supplier: 'Agro Inputs Ltd.', category: 'Fertilizers', price: '150,000', stock: 300, status: 'Active', image: null },
 ];
 
-const PlantPlaceholderIcon = () => (
-    <div className="w-10 h-10 bg-secondary flex items-center justify-center rounded-md shrink-0">
+const farmerProduce = [
+    { id: 'PROD-F01', name: 'Fresh Maize (100kg)', farmer: 'John Mubiru', category: 'Grains', price: '110,000', status: 'Pending Review' },
+    { id: 'PROD-F02', name: 'Robusta Coffee Beans (Grade A)', farmer: 'Aisha Nakato', category: 'Cash Crops', price: '8,500 /kg', status: 'Active' },
+    { id: 'PROD-F03', name: 'Matooke (Large Bunch)', farmer: 'Peter Okello', category: 'Staples', price: '25,000', status: 'Pending Review' },
+];
+
+const PlantPlaceholderIcon = ({className}: {className?: string}) => (
+    <div className={cn("w-10 h-10 bg-secondary flex items-center justify-center rounded-md shrink-0", className)}>
         <Leaf className="w-6 h-6 text-muted-foreground" />
     </div>
 );
@@ -44,6 +52,9 @@ export default function SupplierManagementPage() {
     const [isProductModalOpen, setIsProductModalOpen] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState(null);
     const [activeTab, setActiveTab] = useState('suppliers');
+    const [isDecisionModalOpen, setIsDecisionModalOpen] = useState(false);
+    const [decision, setDecision] = useState<'approve' | 'reject' | null>(null);
+    const { toast } = useToast();
 
     const openSupplierModal = (supplier:any = null) => {
         setSelectedSupplier(supplier);
@@ -55,25 +66,44 @@ export default function SupplierManagementPage() {
         setIsProductModalOpen(true);
     };
 
+    const openDecisionModal = (product:any, decision: 'approve' | 'reject') => {
+        setSelectedProduct(product);
+        setDecision(decision);
+        setIsDecisionModalOpen(true);
+    }
+    
+    const handleDecision = () => {
+        toast({
+            title: `Product ${decision === 'approve' ? 'Approved' : 'Rejected'}`,
+            description: `${selectedProduct.name} has been ${decision === 'approve' ? 'made active' : 'rejected'}.`
+        });
+        setIsDecisionModalOpen(false);
+        setDecision(null);
+        setSelectedProduct(null);
+    }
+
     return (
         <div className="flex flex-col gap-8">
             <header>
                 <h1 className="text-3xl font-bold font-headline">Supplier & Product Management</h1>
-                <p className="text-muted-foreground">Manage vendors and the items they list in the Input Marketplace.</p>
+                <p className="text-muted-foreground">Manage vendors, their inputs, and farmer-listed produce.</p>
             </header>
 
             <Tabs defaultValue="suppliers" onValueChange={setActiveTab}>
                 <div className="flex items-center justify-between">
                     <TabsList>
                         <TabsTrigger value="suppliers">Suppliers</TabsTrigger>
-                        <TabsTrigger value="products">Products</TabsTrigger>
+                        <TabsTrigger value="input-products">Input Products</TabsTrigger>
+                        <TabsTrigger value="farmer-produce">Farmer Produce</TabsTrigger>
                     </TabsList>
                     <div className="flex gap-2">
                         <div className="relative w-full max-w-sm">
                           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                           <Input placeholder="Search..." className="pl-10" />
                         </div>
-                        <Button onClick={() => activeTab === 'suppliers' ? openSupplierModal() : openProductModal()}><Plus className="mr-2"/> Add New</Button>
+                        <Button onClick={() => activeTab !== 'farmer-produce' && (activeTab === 'suppliers' ? openSupplierModal() : openProductModal())} disabled={activeTab === 'farmer-produce'}>
+                            <Plus className="mr-2"/> Add New
+                        </Button>
                     </div>
                 </div>
 
@@ -126,11 +156,11 @@ export default function SupplierManagementPage() {
                     </Card>
                 </TabsContent>
 
-                <TabsContent value="products" className="mt-4">
+                <TabsContent value="input-products" className="mt-4">
                     <Card>
                          <CardHeader>
-                            <CardTitle>All Products</CardTitle>
-                             <CardDescription>Manage all products available in the marketplace.</CardDescription>
+                            <CardTitle>All Input Products</CardTitle>
+                             <CardDescription>Manage all farm input products available in the marketplace.</CardDescription>
                         </CardHeader>
                         <CardContent>
                             <Table>
@@ -167,6 +197,55 @@ export default function SupplierManagementPage() {
                                                         <DropdownMenuItem>Deactivate</DropdownMenuItem>
                                                     </DropdownMenuContent>
                                                 </DropdownMenu>
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </CardContent>
+                    </Card>
+                </TabsContent>
+                
+                 <TabsContent value="farmer-produce" className="mt-4">
+                    <Card>
+                         <CardHeader>
+                            <CardTitle>Farmer Produce Submissions</CardTitle>
+                             <CardDescription>Review and approve produce listed by farmers.</CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <Table>
+                                <TableHeader>
+                                    <TableRow>
+                                        <TableHead>Product</TableHead>
+                                        <TableHead>Farmer</TableHead>
+                                        <TableHead>Category</TableHead>
+                                        <TableHead>Listed Price (UGX)</TableHead>
+                                        <TableHead>Status</TableHead>
+                                        <TableHead className="text-right">Actions</TableHead>
+                                    </TableRow>
+                                </TableHeader>
+                                <TableBody>
+                                    {farmerProduce.map(p => (
+                                        <TableRow key={p.id}>
+                                            <TableCell className="font-medium flex items-center gap-3">
+                                                <PlantPlaceholderIcon />
+                                                {p.name}
+                                            </TableCell>
+                                            <TableCell>{p.farmer}</TableCell>
+                                            <TableCell>{p.category}</TableCell>
+                                            <TableCell>{p.price}</TableCell>
+                                            <TableCell>
+                                                <Badge variant={p.status === 'Active' ? 'default' : p.status === 'Pending Review' ? 'secondary' : 'outline'}>{p.status}</Badge>
+                                            </TableCell>
+                                            <TableCell className="text-right">
+                                                {p.status === 'Pending Review' ? (
+                                                    <div className="flex gap-2 justify-end">
+                                                        <Button variant="outline" size="sm" className="text-green-600 border-green-600 hover:bg-green-50 hover:text-green-700" onClick={() => openDecisionModal(p, 'approve')}>Approve</Button>
+                                                        <Button variant="outline" size="sm" className="text-red-600 border-red-600 hover:bg-red-50 hover:text-red-700" onClick={() => openDecisionModal(p, 'reject')}>Reject</Button>
+                                                    </div>
+                                                ) : (
+                                                    <Button variant="outline" size="sm">View</Button>
+                                                )}
                                             </TableCell>
                                         </TableRow>
                                     ))}
@@ -242,6 +321,26 @@ export default function SupplierManagementPage() {
                     <DialogFooter>
                          <Button variant="destructive" onClick={() => setIsProductModalOpen(false)}>Delete</Button>
                         <Button type="submit" onClick={() => setIsProductModalOpen(false)}>Save Product</Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+
+            <Dialog open={isDecisionModalOpen} onOpenChange={setIsDecisionModalOpen}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Confirm Decision</DialogTitle>
+                        <DialogDescription>
+                            Are you sure you want to {decision} the product listing for "{selectedProduct?.name}"? The farmer will be notified.
+                        </DialogDescription>
+                    </DialogHeader>
+                    <DialogFooter>
+                        <Button variant="outline" onClick={() => setIsDecisionModalOpen(false)}>Cancel</Button>
+                         <Button
+                            variant={decision === 'reject' ? 'destructive' : 'default'}
+                            onClick={handleDecision}
+                        >
+                            {decision === 'approve' ? 'Yes, Approve' : 'Yes, Reject'}
+                        </Button>
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
