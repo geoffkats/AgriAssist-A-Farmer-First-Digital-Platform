@@ -9,6 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
 import { BuyCreditsDialog } from '@/components/buy-credits-dialog';
 import { cn } from '@/lib/utils';
+import { useProStatus } from '@/context/pro-status-context';
 
 const freeFeatures = [
   'Daily market price listings',
@@ -37,6 +38,7 @@ const creditPacks = [
 export default function PricingPage() {
   const [isBuyCreditsOpen, setIsBuyCreditsOpen] = useState(false);
   const [selectedPack, setSelectedPack] = useState(creditPacks[1]);
+  const { isPro } = useProStatus();
 
   const openPurchaseModal = (pack: any) => {
     setSelectedPack(pack);
@@ -75,9 +77,15 @@ export default function PricingPage() {
             </ul>
           </CardContent>
           <CardFooter>
-            <Button variant="secondary" className="w-full" disabled>
-              Your Current Plan
-            </Button>
+            {isPro ? (
+                 <Button variant="outline" className="w-full" disabled>
+                    Downgrade to Free
+                </Button>
+            ) : (
+                <Button variant="secondary" className="w-full" disabled>
+                    Your Current Plan
+                </Button>
+            )}
           </CardFooter>
         </Card>
 
@@ -106,9 +114,15 @@ export default function PricingPage() {
             </ul>
           </CardContent>
           <CardFooter>
-            <Button asChild className="w-full">
-              <Link href="/payment">Upgrade to Pro</Link>
-            </Button>
+            {isPro ? (
+                <Button variant="secondary" className="w-full" disabled>
+                    Your Current Plan
+                </Button>
+            ) : (
+                <Button asChild className="w-full">
+                    <Link href="/payment">Upgrade to Pro</Link>
+                </Button>
+            )}
           </CardFooter>
         </Card>
       </div>
