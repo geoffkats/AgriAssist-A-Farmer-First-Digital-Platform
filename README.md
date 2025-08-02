@@ -57,6 +57,22 @@ To explore the different roles, use the following credentials on the login page:
 | Buyer  | `buyer.user@agriassist.app` | `buyerpass`  |
 | Admin  | `admin@agriassist.app`    | `adminpass`  |
 
+## ⚖️ Usage, Attribution, and Copyright
+
+This frontend template is provided for demonstration and educational purposes. While you are free to learn from and adapt the code, the following rules strictly apply:
+
+### Attribution
+If you use this template, or any significant portion of its code or design, as the foundation for your own project (commercial or non-commercial), you **must** provide clear and visible attribution to the original developer. The required attribution is:
+
+**"Frontend developed by Kato Geoffrey, Synthilogic Enterprise."**
+
+This notice must be placed in the footer of your application or on an "About" page that is easily accessible to users.
+
+### Copyright Policy
+© 2024, Synthilogic Enterprise. All rights reserved.
+
+The code, design, and assets included in this template are the intellectual property of Synthilogic Enterprise. Unauthorized copying, redistribution, or use of this template without proper attribution is strictly prohibited. For inquiries about licensing or commercial use beyond the scope of the attribution rule, please contact Synthilogic Enterprise directly.
+
 ## 🛠️ Tech Stack
 
 - **Framework:** Next.js (App Router)
